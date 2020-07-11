@@ -1,0 +1,71 @@
+/**
+ * Shared file between builds so that they can all use the same dependencies and
+ * maven repositories.
+ **/
+ext.deps = [:]
+def versions = [:]
+versions.android_gradle_plugin = "3.6.3"
+versions.appcompat = "1.1.0"
+versions.constraint_layout = "1.1.3"
+versions.core_ktx = "1.3.0"
+versions.fragment = "1.2.1"
+versions.glide = "4.11.0"
+versions.junit = "4.13"
+versions.kotlin = "1.3.71"
+versions.lifecycle = "2.2.0"
+versions.okhttp_logging_interceptor = "3.9.0"
+versions.recyclerview = "1.2.0-alpha04" // Concat Adapter
+versions.retrofit = "2.9.0"
+ext.versions = versions
+
+def build_versions = [:]
+build_versions.min_sdk = 14
+build_versions.compile_sdk = 29
+build_versions.target_sdk = 29
+build_versions.build_tools = "29.0.3"
+ext.build_versions = build_versions
+
+def deps = [:]
+
+deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
+
+deps.app_compat = "androidx.appcompat:appcompat:$versions.appcompat"
+deps.constraint_layout = "androidx.constraintlayout:constraintlayout:$versions.constraint_layout"
+deps.core_ktx = "androidx.core:core-ktx:$versions.core_ktx"
+
+def fragment = [:]
+fragment.runtime_ktx = "androidx.fragment:fragment-ktx:${versions.fragment}"
+deps.fragment = fragment
+
+def glide = [:]
+glide.runtime = "com.github.bumptech.glide:glide:${versions.glide}"
+glide.compiler = "com.github.bumptech.glide:compiler:${versions.glide}"
+deps.glide = glide
+
+deps.hamcrest = "org.hamcrest:hamcrest-all:$versions.hamcrest"
+
+deps.junit = "junit:junit:$versions.junit"
+
+def kotlin = [:]
+kotlin.stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+kotlin.test = "org.jetbrains.kotlin:kotlin-test-junit:$versions.kotlin"
+kotlin.plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+deps.kotlin = kotlin
+
+def lifecycle = [:]
+lifecycle.livedata_ktx = "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
+lifecycle.viewmodel_ktx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
+lifecycle.viewmodel_savedstate = "androidx.lifecycle:lifecycle-viewmodel-savedstate:$versions.lifecycle"
+deps.lifecycle = lifecycle
+
+deps.okhttp_logging_interceptor = "com.squareup.okhttp3:logging-interceptor:${versions.okhttp_logging_interceptor}"
+
+deps.recycler_view = "androidx.recyclerview:recyclerview:$versions.recyclerview"
+
+def retrofit = [:]
+retrofit.runtime = "com.squareup.retrofit2:retrofit:$versions.retrofit"
+retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+retrofit.mock = "com.squareup.retrofit2:retrofit-mock:$versions.retrofit"
+deps.retrofit = retrofit
+
+ext.deps = deps
