@@ -21,12 +21,7 @@ class ShowNewsFragment : Fragment() {
 
     private val newsService = DependencyProvider.provideService(NewsService::class.java)
 
-    private val viewModelFactory =
-        ShowNewsViewModel.Factory(
-            this,
-            Bundle.EMPTY,
-            newsService
-        )
+    private val viewModelFactory = ShowNewsViewModel.Factory(newsService)
 
     private val viewModel: ShowNewsViewModel by viewModels { viewModelFactory }
 
@@ -78,7 +73,6 @@ class ShowNewsFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance() =
-            ShowNewsFragment()
+        fun newInstance() = ShowNewsFragment()
     }
 }
