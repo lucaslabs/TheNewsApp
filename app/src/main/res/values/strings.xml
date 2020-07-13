@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">TheNewsApp</string>
+    <string name="search_favorite_topic">Start searching your favorite topic :)</string>
+    <string name="enter_search_criteria">Please enter a search criteria.</string>
+    <string name="no_results_found">No results found for your search criteria. Try with a new one :)</string>
 </resources>

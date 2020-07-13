@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.thenewsapp.R
 import com.thenewsapp.data.DependencyProvider
 import com.thenewsapp.data.NewsService
 import com.thenewsapp.data.model.News
@@ -22,13 +24,13 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
 
     private lateinit var actionListener: ActionListener
 
+    private lateinit var adapter: ShowNewsAdapter
+
     private val newsService = DependencyProvider.provideService(NewsService::class.java)
 
     private val viewModelFactory = SharedNewsViewModel.Factory(newsService)
 
     private val viewModel: SharedNewsViewModel by activityViewModels { viewModelFactory }
-
-    private val QUERY = "android"
 
     companion object {
         fun newInstance() = ShowNewsFragment()
@@ -58,7 +60,10 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        loadNews()
+        binding.tvEmpty.text = getString(R.string.search_favorite_topic)
+
+        setupSearchView()
+        setupAdapter()
     }
 
     override fun onNewsSelected(news: News) {
@@ -66,15 +71,50 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
         viewModel.setSelectedNews(news)
     }
 
-    private fun loadNews() {
-        viewModel.getNews(QUERY).observe(viewLifecycleOwner, Observer { resource ->
+    private fun setupSearchView() {
+        binding.svNews.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    searchNews(it)
+                } ?: run {
+                    Toast.makeText(
+                        activity, getString(R.string.enter_search_criteria),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
+    }
+
+    private fun setupAdapter() = with(binding) {
+        rvNews.layoutManager = LinearLayoutManager(activity)
+
+        // TODO Use Concat Adapter
+
+        adapter = ShowNewsAdapter(ArrayList(), this@ShowNewsFragment)
+        rvNews.adapter = adapter
+    }
+
+    private fun searchNews(query: String) {
+        viewModel.getNews(query).observe(viewLifecycleOwner, Observer { resource ->
             when (resource) {
                 is Resource.Loading -> {
                     binding.pbLoading.visibility = View.VISIBLE
+                    binding.tvEmpty.visibility = View.GONE
                 }
                 is Resource.Success -> {
                     binding.pbLoading.visibility = View.GONE
-                    showNews(resource.data)
+                    val news = resource.data
+                    if (news.isNotEmpty()) {
+                        showNews(resource.data)
+                    } else {
+                        showEmptyNews()
+                    }
                 }
                 is Resource.Error -> {
                     binding.pbLoading.visibility = View.GONE
@@ -85,15 +125,17 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
     }
 
     private fun showNews(news: List<News>) = with(binding) {
-        rvNews.layoutManager = LinearLayoutManager(activity)
-
-        // TODO Use Concat Adapter
-
-        val adapter = ShowNewsAdapter(news, this@ShowNewsFragment)
-        rvNews.adapter = adapter
+        adapter.clearAll()
+        adapter.addAll(news)
     }
 
     private fun showError(message: String?) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showEmptyNews() {
+        adapter.clearAll()
+        binding.tvEmpty.visibility = View.VISIBLE
+        binding.tvEmpty.text = getString(R.string.no_results_found)
     }
 }

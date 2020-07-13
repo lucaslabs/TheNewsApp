@@ -7,7 +7,10 @@ import com.thenewsapp.data.model.News
 import com.thenewsapp.databinding.ShowNewsItemBinding
 import com.thenewsapp.presentation.loadUrl
 
-class ShowNewsAdapter(private val news: List<News>, private val listener: NewsSelectedListener) :
+class ShowNewsAdapter(
+    private var news: ArrayList<News>,
+    private val listener: NewsSelectedListener
+) :
     RecyclerView.Adapter<ShowNewsAdapter.ShowNewsViewHolder>() {
 
     private lateinit var binding: ShowNewsItemBinding
@@ -26,6 +29,16 @@ class ShowNewsAdapter(private val news: List<News>, private val listener: NewsSe
 
     override fun onBindViewHolder(holder: ShowNewsViewHolder, position: Int) {
         holder.bind(news[position])
+    }
+
+    fun addAll(newsList: List<News>) {
+        news.addAll(newsList)
+        notifyDataSetChanged()
+    }
+
+    fun clearAll() {
+        news.clear()
+        notifyDataSetChanged()
     }
 
     inner class ShowNewsViewHolder(private val binding: ShowNewsItemBinding) :

@@ -3,6 +3,7 @@ package com.thenewsapp.presentation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.thenewsapp.R
 import com.thenewsapp.data.model.News
 import com.thenewsapp.presentation.newsdetail.NewsDetailFragment
@@ -23,9 +24,9 @@ class MainActivity : AppCompatActivity(), ShowNewsFragment.ActionListener {
     }
 
     private fun showFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, fragment)
-            .addToBackStack(fragment.javaClass.simpleName)
-            .commit()
+        supportFragmentManager.commit {
+            addToBackStack(fragment.javaClass.simpleName)
+            replace(R.id.container, fragment)
+        }
     }
 }
