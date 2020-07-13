@@ -12,10 +12,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ShowNewsViewModel(private val newsService: NewsService) : ViewModel(),
+class SharedNewsViewModel(private val newsService: NewsService) : ViewModel(),
     Callback<NewsResponse> {
 
     private var news = MutableLiveData<Resource<List<News>>>()
+
+    private var selectedNews = MutableLiveData<News>()
 
     fun getNews(query: String): LiveData<Resource<List<News>>> {
         news.value = Resource.Loading()
@@ -35,9 +37,15 @@ class ShowNewsViewModel(private val newsService: NewsService) : ViewModel(),
         }
     }
 
+    fun setSelectedNews(news: News) {
+        selectedNews.value = news
+    }
+
+    fun getSelectedNews(): LiveData<News> = selectedNews
+
     class Factory(private val newsService: NewsService) :
         ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-            ShowNewsViewModel(newsService) as T
+            SharedNewsViewModel(newsService) as T
     }
 }

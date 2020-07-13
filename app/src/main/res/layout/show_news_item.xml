@@ -13,6 +13,7 @@
         android:layout_height="60dp"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
+        android:src="@drawable/ic_image_placeholder"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

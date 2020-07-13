@@ -2,16 +2,19 @@ package com.thenewsapp.presentation.shownews
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.thenewsapp.data.model.News
 import com.thenewsapp.databinding.ShowNewsItemBinding
 import com.thenewsapp.presentation.loadUrl
 
-class ShowNewsAdapter(private val news: List<News>) :
+class ShowNewsAdapter(private val news: List<News>, private val listener: NewsSelectedListener) :
     RecyclerView.Adapter<ShowNewsAdapter.ShowNewsViewHolder>() {
 
     private lateinit var binding: ShowNewsItemBinding
+
+    interface NewsSelectedListener {
+        fun onNewsSelected(news: News)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowNewsViewHolder {
         binding = ShowNewsItemBinding
@@ -33,7 +36,7 @@ class ShowNewsAdapter(private val news: List<News>) :
             tvTitle.text = news.title
             tvSource.text = news.source.name
             root.setOnClickListener {
-                Toast.makeText(root.context, "Clicked on ${news.title}", Toast.LENGTH_SHORT).show()
+                listener.onNewsSelected(news)
             }
         }
     }
