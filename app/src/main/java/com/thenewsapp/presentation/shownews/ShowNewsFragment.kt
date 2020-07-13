@@ -17,6 +17,8 @@ import com.thenewsapp.data.NewsService
 import com.thenewsapp.data.model.News
 import com.thenewsapp.data.net.model.Resource
 import com.thenewsapp.databinding.ShowNewsFragmentBinding
+import com.thenewsapp.presentation.hide
+import com.thenewsapp.presentation.show
 
 class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
 
@@ -60,10 +62,9 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        binding.tvEmpty.text = getString(R.string.search_favorite_topic)
-
         setupSearchView()
         setupAdapter()
+        getNews()
     }
 
     override fun onNewsSelected(news: News) {
@@ -78,8 +79,7 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
                     searchNews(it)
                 } ?: run {
                     Toast.makeText(
-                        activity, getString(R.string.enter_search_criteria),
-                        Toast.LENGTH_SHORT
+                        activity, getString(R.string.enter_search_criteria), Toast.LENGTH_SHORT
                     ).show()
                 }
                 return false
@@ -96,35 +96,46 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
 
         // TODO Use Concat Adapter
 
-        adapter = ShowNewsAdapter(ArrayList(), this@ShowNewsFragment)
+        adapter = ShowNewsAdapter(arrayListOf(), this@ShowNewsFragment)
         rvNews.adapter = adapter
     }
 
+    private fun getNews() {
+        viewModel.getNews()?.let { news ->
+            binding.tvEmpty.hide()
+            showNews(news)
+        } ?: run {
+            binding.tvEmpty.show()
+            binding.tvEmpty.text = getString(R.string.search_favorite_topic)
+        }
+    }
+
     private fun searchNews(query: String) {
-        viewModel.getNews(query).observe(viewLifecycleOwner, Observer { resource ->
+        viewModel.searchNews(query).observe(viewLifecycleOwner, Observer { resource ->
             when (resource) {
                 is Resource.Loading -> {
-                    binding.pbLoading.visibility = View.VISIBLE
-                    binding.tvEmpty.visibility = View.GONE
+                    binding.pbLoading.show()
+                    binding.tvEmpty.hide()
                 }
                 is Resource.Success -> {
-                    binding.pbLoading.visibility = View.GONE
-                    val news = resource.data
-                    if (news.isNotEmpty()) {
-                        showNews(resource.data)
-                    } else {
-                        showEmptyNews()
+                    binding.pbLoading.hide()
+                    resource.data?.let { news ->
+                        if (news.isNotEmpty()) {
+                            showNews(news)
+                        } else {
+                            showNoResults()
+                        }
                     }
                 }
                 is Resource.Error -> {
-                    binding.pbLoading.visibility = View.GONE
+                    binding.pbLoading.hide()
                     showError(resource.throwable.message)
                 }
             }
         })
     }
 
-    private fun showNews(news: List<News>) = with(binding) {
+    private fun showNews(news: ArrayList<News>) = with(binding) {
         adapter.clearAll()
         adapter.addAll(news)
     }
@@ -133,9 +144,9 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun showEmptyNews() {
+    private fun showNoResults() {
         adapter.clearAll()
-        binding.tvEmpty.visibility = View.VISIBLE
+        binding.tvEmpty.show()
         binding.tvEmpty.text = getString(R.string.no_results_found)
     }
 }

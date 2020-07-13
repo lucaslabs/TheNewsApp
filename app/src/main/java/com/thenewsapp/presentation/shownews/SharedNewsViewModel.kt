@@ -15,18 +15,18 @@ import retrofit2.Response
 class SharedNewsViewModel(private val newsService: NewsService) : ViewModel(),
     Callback<NewsResponse> {
 
-    private var news = MutableLiveData<Resource<List<News>>>()
+    private var news = MutableLiveData<Resource<ArrayList<News>>>()
 
     private var selectedNews = MutableLiveData<News>()
 
-    fun getNews(query: String): LiveData<Resource<List<News>>> {
+    fun searchNews(query: String): LiveData<Resource<ArrayList<News>>> {
         news.value = Resource.Loading()
         newsService.getNews(query).enqueue(this)
         return news
     }
 
-    override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-        news.value = Resource.Error(t)
+    fun getNews(): ArrayList<News>? {
+        return news.value?.data
     }
 
     override fun onResponse(call: Call<NewsResponse>, response: Response<NewsResponse>) {
@@ -35,6 +35,10 @@ class SharedNewsViewModel(private val newsService: NewsService) : ViewModel(),
                 news.value = Resource.Success(it.news)
             }
         }
+    }
+
+    override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
+        news.value = Resource.Error(t)
     }
 
     fun setSelectedNews(news: News) {

@@ -21,9 +21,10 @@
         android:id="@+id/rv_news"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sv_news" />
+        app:layout_constraintTop_toBottomOf="@+id/sv_news"
+        android:paddingBottom="70dp"/>
 
     <TextView
         android:id="@+id/tv_empty"
