@@ -4,8 +4,10 @@ import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 
-fun ImageView.loadUrl(url: String) {
-    Glide.with(context).load(url).into(this)
+fun ImageView.loadUrl(urlToImage: String?) {
+    urlToImage?.let { url ->
+        Glide.with(context).load(url).into(this)
+    }
 }
 
 fun View.show() {
