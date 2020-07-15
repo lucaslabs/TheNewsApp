@@ -60,5 +60,8 @@ dependencies {
     implementation deps.retrofit.gson
     implementation deps.retrofit.mock
 
+    testImplementation deps.arch_core.testing
+    testImplementation deps.hamcrest
     testImplementation deps.junit
+    testImplementation deps.mockito.core
 }
