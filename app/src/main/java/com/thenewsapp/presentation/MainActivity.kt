@@ -31,13 +31,11 @@ class MainActivity : AppCompatActivity(), ShowNewsFragment.ActionListener {
 
     private fun showFragment(fragment: Fragment, sharedImageView: ImageView? = null) {
         supportFragmentManager.commit {
-
             sharedImageView?.let { image ->
                 addSharedElement(image, image.transitionName)
             }
-
-            replace(R.id.container, fragment)
             addToBackStack(fragment.javaClass.simpleName)
+            replace(R.id.container, fragment)
         }
     }
 }
