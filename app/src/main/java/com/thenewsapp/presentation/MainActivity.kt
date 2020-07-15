@@ -1,10 +1,10 @@
 package com.thenewsapp.presentation
 
 import android.os.Bundle
-import android.transition.TransitionInflater
+import android.transition.Explode
+import android.transition.TransitionSet
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.thenewsapp.R
@@ -23,34 +23,21 @@ class MainActivity : AppCompatActivity(), ShowNewsFragment.ActionListener {
     }
 
     override fun showNewsDetailView(news: News, sharedImageView: ImageView) {
-        val newsDetailFragment = createTransitionsForNewsDetailFragment()
-        showFragment(newsDetailFragment)
+        val newsDetailFragment = NewsDetailFragment.newInstance()
+        newsDetailFragment.sharedElementEnterTransition = TransitionSet().addTransition(Explode())
+
+        showFragment(newsDetailFragment, sharedImageView)
     }
 
     private fun showFragment(fragment: Fragment, sharedImageView: ImageView? = null) {
         supportFragmentManager.commit {
 
             sharedImageView?.let { image ->
-                ViewCompat.getTransitionName(image)?.let { transitionName ->
-                    addSharedElement(image, transitionName)
-                }
+                addSharedElement(image, image.transitionName)
             }
 
-            addToBackStack(fragment.javaClass.simpleName)
             replace(R.id.container, fragment)
+            addToBackStack(fragment.javaClass.simpleName)
         }
-    }
-
-    private fun createTransitionsForNewsDetailFragment(): NewsDetailFragment {
-        val changeImageTransformTransition =
-            TransitionInflater.from(this).inflateTransition(R.transition.change_image_transform)
-
-        val explodeTransition =
-            TransitionInflater.from(this).inflateTransition(android.R.transition.explode)
-
-        val newsDetailFragment = NewsDetailFragment.newInstance()
-        newsDetailFragment.sharedElementEnterTransition = changeImageTransformTransition
-        newsDetailFragment.enterTransition = explodeTransition
-        return newsDetailFragment
     }
 }
