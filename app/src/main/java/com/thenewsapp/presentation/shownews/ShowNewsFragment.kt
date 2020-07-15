@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -39,7 +40,7 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
     }
 
     interface ActionListener {
-        fun showNewsDetailView(news: News)
+        fun showNewsDetailView(news: News, sharedImageView: ImageView)
     }
 
     override fun onAttach(context: Context) {
@@ -67,9 +68,9 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
         getNews()
     }
 
-    override fun onNewsSelected(news: News) {
-        actionListener.showNewsDetailView(news)
+    override fun onNewsSelected(news: News, sharedImageView: ImageView) {
         viewModel.setSelectedNews(news)
+        actionListener.showNewsDetailView(news, sharedImageView)
     }
 
     private fun setupSearchView() {

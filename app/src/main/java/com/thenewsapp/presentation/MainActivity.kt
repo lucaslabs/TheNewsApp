@@ -1,7 +1,10 @@
 package com.thenewsapp.presentation
 
 import android.os.Bundle
+import android.transition.TransitionInflater
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.thenewsapp.R
@@ -19,14 +22,35 @@ class MainActivity : AppCompatActivity(), ShowNewsFragment.ActionListener {
         }
     }
 
-    override fun showNewsDetailView(news: News) {
-        showFragment(NewsDetailFragment.newInstance())
+    override fun showNewsDetailView(news: News, sharedImageView: ImageView) {
+        val newsDetailFragment = createTransitionsForNewsDetailFragment()
+        showFragment(newsDetailFragment)
     }
 
-    private fun showFragment(fragment: Fragment) {
+    private fun showFragment(fragment: Fragment, sharedImageView: ImageView? = null) {
         supportFragmentManager.commit {
+
+            sharedImageView?.let { image ->
+                ViewCompat.getTransitionName(image)?.let { transitionName ->
+                    addSharedElement(image, transitionName)
+                }
+            }
+
             addToBackStack(fragment.javaClass.simpleName)
             replace(R.id.container, fragment)
         }
+    }
+
+    private fun createTransitionsForNewsDetailFragment(): NewsDetailFragment {
+        val changeImageTransformTransition =
+            TransitionInflater.from(this).inflateTransition(R.transition.change_image_transform)
+
+        val explodeTransition =
+            TransitionInflater.from(this).inflateTransition(android.R.transition.explode)
+
+        val newsDetailFragment = NewsDetailFragment.newInstance()
+        newsDetailFragment.sharedElementEnterTransition = changeImageTransformTransition
+        newsDetailFragment.enterTransition = explodeTransition
+        return newsDetailFragment
     }
 }

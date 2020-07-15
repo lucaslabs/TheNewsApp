@@ -2,6 +2,7 @@ package com.thenewsapp.presentation.shownews
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.thenewsapp.data.model.News
 import com.thenewsapp.databinding.ShowNewsItemBinding
@@ -16,7 +17,7 @@ class ShowNewsAdapter(
     private lateinit var binding: ShowNewsItemBinding
 
     interface NewsSelectedListener {
-        fun onNewsSelected(news: News)
+        fun onNewsSelected(news: News, sharedImageView: ImageView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowNewsViewHolder {
@@ -49,7 +50,7 @@ class ShowNewsAdapter(
             tvTitle.text = news.title
             tvSource.text = news.source.name
             root.setOnClickListener {
-                listener.onNewsSelected(news)
+                listener.onNewsSelected(news, ivNews)
             }
         }
     }

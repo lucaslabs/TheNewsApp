@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp">
 
         <ImageView
@@ -17,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:src="@drawable/ic_image_placeholder"
+            android:transitionName="imageTransition"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
