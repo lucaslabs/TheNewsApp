@@ -45,7 +45,6 @@ class SharedNewsViewModelTest {
 
     private lateinit var viewModel: SharedNewsViewModel
 
-    private val EMPTY_QUERY = ""
     private val VALID_QUERY = "android"
     private val NOT_VALID_QUERY = "Lorem ipsum"
 
