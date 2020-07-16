@@ -3,11 +3,13 @@ package com.thenewsapp.presentation
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.thenewsapp.R
 
 fun ImageView.loadUrl(urlToImage: String?) {
-    urlToImage?.let { url ->
-        Glide.with(context).load(url).into(this)
-    }
+    Glide.with(context)
+        .load(urlToImage)
+        .placeholder(R.drawable.ic_image_placeholder)
+        .into(this)
 }
 
 fun View.show() {
