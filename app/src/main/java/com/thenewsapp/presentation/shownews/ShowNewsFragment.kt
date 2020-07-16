@@ -112,7 +112,10 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
     }
 
     private fun searchNews(query: String) {
-        viewModel.searchNews(query).observe(viewLifecycleOwner, Observer { resource ->
+        viewModel.searchNews(query)
+
+        // Observe the LiveData
+        viewModel.news.observe(viewLifecycleOwner, Observer { resource ->
             when (resource) {
                 is Resource.Loading -> {
                     binding.pbLoading.show()

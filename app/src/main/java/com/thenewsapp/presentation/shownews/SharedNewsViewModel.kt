@@ -15,30 +15,31 @@ import retrofit2.Response
 class SharedNewsViewModel(private val newsService: NewsService) : ViewModel(),
     Callback<NewsResponse> {
 
-    private var news = MutableLiveData<Resource<ArrayList<News>>>()
+    private var _news = MutableLiveData<Resource<ArrayList<News>>>()
+    val news: LiveData<Resource<ArrayList<News>>>
+        get() = _news
 
     private var selectedNews = MutableLiveData<News>()
 
-    fun searchNews(query: String): LiveData<Resource<ArrayList<News>>> {
-        news.value = Resource.Loading()
+    fun searchNews(query: String) {
+        _news.value = Resource.Loading()
         newsService.getNews(query).enqueue(this)
-        return news
     }
 
     fun getNews(): ArrayList<News>? {
-        return news.value?.data
+        return _news.value?.data
     }
 
     override fun onResponse(call: Call<NewsResponse>, response: Response<NewsResponse>) {
         if (response.isSuccessful) {
             response.body()?.let {
-                news.value = Resource.Success(it.news)
+                _news.value = Resource.Success(it.news)
             }
         }
     }
 
     override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-        news.value = Resource.Error(t)
+        _news.value = Resource.Error(t)
     }
 
     fun setSelectedNews(news: News) {

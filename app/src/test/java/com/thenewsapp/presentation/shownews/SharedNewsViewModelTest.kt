@@ -20,6 +20,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.BDDMockito.given
 import org.mockito.Captor
 import org.mockito.Mock
+import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import retrofit2.mock.Calls
@@ -38,10 +39,7 @@ class SharedNewsViewModelTest {
     lateinit var newsService: NewsService
 
     @Captor
-    lateinit var successCaptor: ArgumentCaptor<Resource.Success<*>>
-
-    @Captor
-    lateinit var errorCaptor: ArgumentCaptor<Resource.Error<*>>
+    lateinit var argumentCaptor: ArgumentCaptor<Resource<*>>
 
     private lateinit var viewModel: SharedNewsViewModel
 
@@ -66,8 +64,11 @@ class SharedNewsViewModelTest {
         assertEquals("test", mutableLiveData.value)
     }
 
-    // Test name: subjectUnderTest_actionOrInput_resultState
-    // Test name: `subject under test with action or input should return result state`
+    /**
+     * Test naming convention
+     * 1. subjectUnderTest_actionOrInput_resultState
+     * 2. `subject under test with action or input should return result state`
+     */
     @Test
     fun `search news with a valid query should return success event`() {
         // Given
@@ -76,14 +77,23 @@ class SharedNewsViewModelTest {
         val mockSuccessResponse = Calls.response(mockNewsResponse)
         given(newsService.getNews(VALID_QUERY)).willReturn(mockSuccessResponse)
 
-        // When
-        viewModel.searchNews(VALID_QUERY).observeForever(observer)
+        try {
+            // Observe the LiveData forever
+            viewModel.news.observeForever(observer)
 
-        // Then
-        successCaptor.run {
-            verify(observer).onChanged(capture())
-            assertThat(value, instanceOf(Resource.Success::class.java))
-            assertThat(expectedNews, equalTo(value.data))
+            // When
+            viewModel.searchNews(VALID_QUERY)
+
+            // Then
+            argumentCaptor.run {
+                verify(observer, times(2)).onChanged(capture())
+                assertThat(allValues[0], instanceOf(Resource.Loading::class.java))
+                assertThat(allValues[1], instanceOf(Resource.Success::class.java))
+                assertThat(expectedNews, equalTo(value.data))
+            }
+        } finally {
+            // Whatever happens, don't forget to remove the observer!
+            viewModel.news.removeObserver(observer)
         }
     }
 
@@ -94,14 +104,23 @@ class SharedNewsViewModelTest {
         val mockErrorResponse = Calls.failure<NewsResponse>(expectedError)
         given(newsService.getNews(NOT_VALID_QUERY)).willReturn(mockErrorResponse)
 
-        // When
-        viewModel.searchNews(NOT_VALID_QUERY).observeForever(observer)
+        try {
+            // Observe the LiveData forever
+            viewModel.news.observeForever(observer)
 
-        // Then
-        errorCaptor.run {
-            verify(observer).onChanged(capture())
-            assertThat(value, instanceOf(Resource.Error::class.java))
-            assertThat(expectedError, equalTo(value.throwable))
+            // When
+            viewModel.searchNews(NOT_VALID_QUERY)
+
+            // Then
+            argumentCaptor.run {
+                verify(observer, times(2)).onChanged(capture())
+                assertThat(allValues[0], instanceOf(Resource.Loading::class.java))
+                assertThat(allValues[1], instanceOf(Resource.Error::class.java))
+                assertThat(expectedError.message, equalTo(value.message))
+            }
+        } finally {
+            // Whatever happens, don't forget to remove the observer!
+            viewModel.news.removeObserver(observer)
         }
     }
 }
