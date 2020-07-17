@@ -9,16 +9,14 @@ import com.thenewsapp.data.model.NewsResponse
 import com.thenewsapp.data.net.model.Resource
 import junit.framework.TestCase.assertEquals
 import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.ArgumentCaptor
-import org.mockito.BDDMockito.given
-import org.mockito.Captor
+import org.mockito.BDDMockito.*
 import org.mockito.Mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
@@ -38,9 +36,6 @@ class SharedNewsViewModelTest {
     @Mock
     lateinit var newsService: NewsService
 
-    @Captor
-    lateinit var argumentCaptor: ArgumentCaptor<Resource<*>>
-
     private lateinit var viewModel: SharedNewsViewModel
 
     private val VALID_QUERY = "android"
@@ -50,6 +45,15 @@ class SharedNewsViewModelTest {
     fun setup() {
         MockitoAnnotations.initMocks(this)
         viewModel = SharedNewsViewModel(newsService)
+
+        // Observe the LiveData forever
+        viewModel.news.observeForever(observer)
+    }
+
+    @After
+    fun tearDown() {
+        // Whatever happens, remove the observer!
+        viewModel.news.removeObserver(observer)
     }
 
     @Test
@@ -77,24 +81,18 @@ class SharedNewsViewModelTest {
         val mockSuccessResponse = Calls.response(mockNewsResponse)
         given(newsService.getNews(VALID_QUERY)).willReturn(mockSuccessResponse)
 
-        try {
-            // Observe the LiveData forever
-            viewModel.news.observeForever(observer)
+        // When
+        viewModel.searchNews(VALID_QUERY)
+        val actualNews = viewModel.news.value
 
-            // When
-            viewModel.searchNews(VALID_QUERY)
+        // Then
+        assertThat(expectedNews, equalTo(actualNews?.data))
 
-            // Then
-            argumentCaptor.run {
-                verify(observer, times(2)).onChanged(capture())
-                assertThat(allValues[0], instanceOf(Resource.Loading::class.java))
-                assertThat(allValues[1], instanceOf(Resource.Success::class.java))
-                assertThat(expectedNews, equalTo(value.data))
-            }
-        } finally {
-            // Whatever happens, don't forget to remove the observer!
-            viewModel.news.removeObserver(observer)
-        }
+        verify(observer, times(1)).onChanged(isA(Resource.Loading::class.java))
+        verify(observer, times(1)).onChanged(isA(Resource.Success::class.java))
+        verify(observer, never()).onChanged(isA(Resource.Error::class.java))
+
+        verifyNoMoreInteractions(observer)
     }
 
     @Test
@@ -104,23 +102,17 @@ class SharedNewsViewModelTest {
         val mockErrorResponse = Calls.failure<NewsResponse>(expectedError)
         given(newsService.getNews(NOT_VALID_QUERY)).willReturn(mockErrorResponse)
 
-        try {
-            // Observe the LiveData forever
-            viewModel.news.observeForever(observer)
+        // When
+        viewModel.searchNews(NOT_VALID_QUERY)
+        val actualError = viewModel.news.value
 
-            // When
-            viewModel.searchNews(NOT_VALID_QUERY)
+        // Then
+        assertThat(expectedError.message, equalTo(actualError?.message))
 
-            // Then
-            argumentCaptor.run {
-                verify(observer, times(2)).onChanged(capture())
-                assertThat(allValues[0], instanceOf(Resource.Loading::class.java))
-                assertThat(allValues[1], instanceOf(Resource.Error::class.java))
-                assertThat(expectedError.message, equalTo(value.message))
-            }
-        } finally {
-            // Whatever happens, don't forget to remove the observer!
-            viewModel.news.removeObserver(observer)
-        }
+        verify(observer, times(1)).onChanged(isA(Resource.Loading::class.java))
+        verify(observer, times(1)).onChanged(isA(Resource.Error::class.java))
+        verify(observer, never()).onChanged(isA(Resource.Success::class.java))
+
+        verifyNoMoreInteractions(observer)
     }
 }
