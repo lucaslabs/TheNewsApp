@@ -12,5 +12,5 @@ interface NewsService {
     }
 
     @GET("/v2/everything")
-    fun getNews(@Query("q") query: String): Call<NewsResponse>
+    fun searchNews(@Query("q") query: String): Call<NewsResponse>
 }

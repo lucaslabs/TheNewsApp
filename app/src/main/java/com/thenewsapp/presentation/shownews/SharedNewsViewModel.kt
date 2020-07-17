@@ -23,7 +23,7 @@ class SharedNewsViewModel(private val newsService: NewsService) : ViewModel(),
 
     fun searchNews(query: String) {
         _news.value = Resource.Loading()
-        newsService.getNews(query).enqueue(this)
+        newsService.searchNews(query).enqueue(this)
     }
 
     fun getNews(): ArrayList<News>? {

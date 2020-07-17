@@ -79,7 +79,7 @@ class SharedNewsViewModelTest {
         val expectedNews = arrayListOf<News>()
         val mockNewsResponse = NewsResponse(expectedNews)
         val mockSuccessResponse = Calls.response(mockNewsResponse)
-        given(newsService.getNews(VALID_QUERY)).willReturn(mockSuccessResponse)
+        given(newsService.searchNews(VALID_QUERY)).willReturn(mockSuccessResponse)
 
         // When
         viewModel.searchNews(VALID_QUERY)
@@ -100,7 +100,7 @@ class SharedNewsViewModelTest {
         // Given
         val expectedError = Throwable("Error message")
         val mockErrorResponse = Calls.failure<NewsResponse>(expectedError)
-        given(newsService.getNews(NOT_VALID_QUERY)).willReturn(mockErrorResponse)
+        given(newsService.searchNews(NOT_VALID_QUERY)).willReturn(mockErrorResponse)
 
         // When
         viewModel.searchNews(NOT_VALID_QUERY)
