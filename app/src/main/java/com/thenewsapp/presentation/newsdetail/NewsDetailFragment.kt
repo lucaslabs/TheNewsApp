@@ -41,7 +41,11 @@ class NewsDetailFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.getSelectedNews().observe(viewLifecycleOwner, Observer { news ->
+        getSelectedNews()
+    }
+
+    private fun getSelectedNews() {
+        viewModel.selectedNews.observe(viewLifecycleOwner, Observer { news ->
             with(binding) {
                 ivNews.loadUrl(news.urlToImage)
                 tvTitle.text = news.title

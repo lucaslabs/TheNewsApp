@@ -101,16 +101,6 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
         rvNews.adapter = adapter
     }
 
-    private fun getNews() {
-        viewModel.getNews()?.let { news ->
-            binding.tvEmpty.hide()
-            showNews(news)
-        } ?: run {
-            binding.tvEmpty.show()
-            binding.tvEmpty.text = getString(R.string.search_favorite_topic)
-        }
-    }
-
     private fun searchNews(query: String) {
         viewModel.searchNews(query)
 
@@ -137,6 +127,16 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
                 }
             }
         })
+    }
+
+    private fun getNews() {
+        viewModel.getNews()?.let { news ->
+            binding.tvEmpty.hide()
+            showNews(news)
+        } ?: run {
+            binding.tvEmpty.show()
+            binding.tvEmpty.text = getString(R.string.search_favorite_topic)
+        }
     }
 
     private fun showNews(news: ArrayList<News>) = with(binding) {

@@ -18,7 +18,8 @@ class SharedNewsViewModel(private val newsService: NewsService) : ViewModel(),
     private var _news = MutableLiveData<Resource<ArrayList<News>>>()
     val news: LiveData<Resource<ArrayList<News>>> = _news
 
-    private var selectedNews = MutableLiveData<News>()
+    private var _selectedNews = MutableLiveData<News>()
+    val selectedNews: LiveData<News> = _selectedNews
 
     fun searchNews(query: String) {
         _news.value = Resource.Loading()
@@ -42,10 +43,8 @@ class SharedNewsViewModel(private val newsService: NewsService) : ViewModel(),
     }
 
     fun setSelectedNews(news: News) {
-        selectedNews.value = news
+        _selectedNews.value = news
     }
-
-    fun getSelectedNews(): LiveData<News> = selectedNews
 
     class Factory(private val newsService: NewsService) :
         ViewModelProvider.NewInstanceFactory() {
