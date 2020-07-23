@@ -16,8 +16,7 @@ class SharedNewsViewModel(private val newsService: NewsService) : ViewModel(),
     Callback<NewsResponse> {
 
     private var _news = MutableLiveData<Resource<ArrayList<News>>>()
-    val news: LiveData<Resource<ArrayList<News>>>
-        get() = _news
+    val news: LiveData<Resource<ArrayList<News>>> = _news
 
     private var selectedNews = MutableLiveData<News>()
 
