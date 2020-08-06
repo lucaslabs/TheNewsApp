@@ -11,8 +11,7 @@ import com.thenewsapp.presentation.loadUrl
 class ShowNewsAdapter(
     private var news: ArrayList<News>,
     private val listener: NewsSelectedListener
-) :
-    RecyclerView.Adapter<ShowNewsAdapter.ShowNewsViewHolder>() {
+) : RecyclerView.Adapter<ShowNewsAdapter.ShowNewsViewHolder>() {
 
     private lateinit var binding: ShowNewsItemBinding
 

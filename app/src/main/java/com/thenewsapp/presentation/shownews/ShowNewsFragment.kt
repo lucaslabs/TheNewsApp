@@ -123,7 +123,7 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
                 }
                 is Resource.Error -> {
                     binding.pbLoading.hide()
-                    showError(resource.throwable.message)
+                    showError(resource.message)
                 }
             }
         })
