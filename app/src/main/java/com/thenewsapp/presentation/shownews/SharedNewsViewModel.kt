@@ -18,16 +18,20 @@ class SharedNewsViewModel(private val newsService: NewsService) : ViewModel() {
 
     fun searchNews(query: String) {
         viewModelScope.launch {
-            _news.value = Resource.Loading()
-            val response = newsService.searchNews(query)
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    _news.value = Resource.Success(it.news)
-                } ?: run {
+            try {
+                _news.value = Resource.Loading()
+                val response = newsService.searchNews(query)
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        _news.value = Resource.Success(it.news)
+                    } ?: run {
+                        error(response)
+                    }
+                } else {
                     error(response)
                 }
-            } else {
-                error(response)
+            } catch (e: Exception) {
+                _news.value = Resource.Error(e.message)
             }
         }
     }
