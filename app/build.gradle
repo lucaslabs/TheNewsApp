@@ -7,7 +7,6 @@ android {
     compileSdkVersion build_versions.compile_sdk
     buildToolsVersion build_versions.build_tools
 
-
     defaultConfig {
         applicationId "com.thenewsapp"
         minSdkVersion build_versions.min_sdk
@@ -39,6 +38,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
 }
 
 dependencies {
@@ -49,6 +53,9 @@ dependencies {
     implementation deps.app_compat
     implementation deps.constraint_layout
     implementation deps.core_ktx
+    implementation deps.coroutines.core
+    implementation deps.coroutines.android
+    implementation deps.coroutines.test
     implementation deps.fragment.runtime_ktx
     implementation deps.glide.runtime
     implementation deps.kotlin.stdlib
