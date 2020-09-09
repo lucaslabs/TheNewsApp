@@ -60,8 +60,8 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         setupSearchView()
         setupAdapter()
@@ -131,13 +131,16 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
 
     private fun getNews() {
         viewModel.getNews()?.let { news ->
+            // Get news from LiveData
             binding.tvEmpty.hide()
             showNews(news)
         } ?: run {
             viewModel.getQuery()?.let { query ->
+                // Get saved query from ViewModel state
                 binding.svNews.setQuery(query, true)
                 searchNews(query)
             } ?: run {
+                // Show empty view
                 binding.tvEmpty.show()
                 binding.tvEmpty.text = getString(R.string.search_favorite_topic)
             }
