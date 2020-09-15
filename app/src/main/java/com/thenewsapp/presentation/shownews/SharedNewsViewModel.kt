@@ -17,7 +17,7 @@ class SharedNewsViewModel(
         private const val QUERY_KEY = "query"
     }
 
-    private var _news = MutableLiveData<Resource<ArrayList<News>>>()
+    private val _news = MutableLiveData<Resource<ArrayList<News>>>()
     val news: LiveData<Resource<ArrayList<News>>> = _news
 
     private var _selectedNews = MutableLiveData<News>()
