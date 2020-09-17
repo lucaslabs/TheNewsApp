@@ -20,7 +20,7 @@ class SharedNewsViewModel(
     private val _news = MutableLiveData<Resource<ArrayList<News>>>()
     val news: LiveData<Resource<ArrayList<News>>> = _news
 
-    private var _selectedNews = MutableLiveData<News>()
+    private val _selectedNews = MutableLiveData<News>()
 
     fun searchNews(query: String) {
 
@@ -58,6 +58,8 @@ class SharedNewsViewModel(
         defaultState: Bundle?,
         private val newsService: NewsService
     ) : AbstractSavedStateViewModelFactory(owner, defaultState) {
+
+        @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(
             key: String,
             modelClass: Class<T>,
