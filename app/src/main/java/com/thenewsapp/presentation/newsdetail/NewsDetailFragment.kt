@@ -14,7 +14,6 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.toSpannable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import com.thenewsapp.data.model.News
 import com.thenewsapp.databinding.NewsDetailFragmentBinding
 import com.thenewsapp.presentation.loadUrl
@@ -38,14 +37,14 @@ class NewsDetailFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         getSelectedNews()
     }
 
     private fun getSelectedNews() {
-        viewModel.selectedNews.observe(viewLifecycleOwner, Observer { news ->
+        viewModel.getSelectedNews()?.let { news ->
             with(binding) {
                 ivNews.loadUrl(news.urlToImage)
                 tvTitle.text = news.title
@@ -56,7 +55,7 @@ class NewsDetailFragment : Fragment() {
                 tvUrl.text = getNewsUrl(news)
                 tvUrl.movementMethod = LinkMovementMethod.getInstance()
             }
-        })
+        }
     }
 
     private fun getNewsUrl(news: News): Spannable {

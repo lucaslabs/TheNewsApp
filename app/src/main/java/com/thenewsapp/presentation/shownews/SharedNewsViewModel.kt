@@ -1,34 +1,39 @@
 package com.thenewsapp.presentation.shownews
 
+import android.os.Bundle
 import androidx.lifecycle.*
+import androidx.savedstate.SavedStateRegistryOwner
 import com.thenewsapp.data.NewsService
 import com.thenewsapp.data.model.News
-import com.thenewsapp.data.model.NewsResponse
 import com.thenewsapp.data.net.model.Resource
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
-class SharedNewsViewModel(private val newsService: NewsService) : ViewModel() {
+class SharedNewsViewModel(
+    private val savedStateHandle: SavedStateHandle,
+    private val newsService: NewsService
+) : ViewModel() {
 
-    private var _news = MutableLiveData<Resource<ArrayList<News>>>()
+    companion object {
+        private const val QUERY_KEY = "query"
+    }
+
+    private val _news = MutableLiveData<Resource<ArrayList<News>>>()
     val news: LiveData<Resource<ArrayList<News>>> = _news
 
-    private var _selectedNews = MutableLiveData<News>()
-    val selectedNews: LiveData<News> = _selectedNews
+    private val _selectedNews = MutableLiveData<News>()
 
     fun searchNews(query: String) {
+
+        saveQuery(query)
+
         viewModelScope.launch {
             try {
                 _news.value = Resource.Loading()
                 val response = newsService.searchNews(query)
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        _news.value = Resource.Success(it.news)
-                    } ?: run {
-                        error(response)
-                    }
+                if (response.isSuccessful && response.body() != null) {
+                    _news.value = Resource.Success(response.body()!!.news)
                 } else {
-                    error(response)
+                    _news.value = Resource.Error(response.message())
                 }
             } catch (e: Exception) {
                 _news.value = Resource.Error(e.message)
@@ -36,21 +41,31 @@ class SharedNewsViewModel(private val newsService: NewsService) : ViewModel() {
         }
     }
 
-    fun getNews(): ArrayList<News>? {
-        return _news.value?.data
-    }
+    fun getNews(): ArrayList<News>? = _news.value?.data
 
     fun setSelectedNews(news: News) {
         _selectedNews.value = news
     }
 
-    private fun error(response: Response<NewsResponse>) {
-        _news.value = Resource.Error(response.message())
-    }
+    fun getSelectedNews() = _selectedNews.value
 
-    class Factory(private val newsService: NewsService) :
-        ViewModelProvider.NewInstanceFactory() {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-            SharedNewsViewModel(newsService) as T
+    fun getQuery() = savedStateHandle.get<String>(QUERY_KEY)
+
+    private fun saveQuery(query: String) = savedStateHandle.set(QUERY_KEY, query)
+
+    class Factory(
+        owner: SavedStateRegistryOwner,
+        defaultState: Bundle?,
+        private val newsService: NewsService
+    ) : AbstractSavedStateViewModelFactory(owner, defaultState) {
+
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel?> create(
+            key: String,
+            modelClass: Class<T>,
+            handle: SavedStateHandle
+        ): T {
+            return SharedNewsViewModel(handle, newsService) as T
+        }
     }
 }
