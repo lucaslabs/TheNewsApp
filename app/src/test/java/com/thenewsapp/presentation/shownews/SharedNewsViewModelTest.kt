@@ -48,6 +48,7 @@ class SharedNewsViewModelTest {
 
     private lateinit var viewModel: SharedNewsViewModel
 
+    private val TEST_VALUE = "test"
     private val VALID_QUERY = "android"
     private val NOT_VALID_QUERY = "Lorem ipsum"
     private val NOT_FOUND_ERROR_CODE = 404
@@ -55,7 +56,7 @@ class SharedNewsViewModelTest {
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        viewModel = SharedNewsViewModel(newsService)
+        viewModel = SharedNewsViewModel(null, newsService)
 
         // Observe the LiveData forever
         viewModel.news.observeForever(observer)
@@ -100,10 +101,10 @@ class SharedNewsViewModelTest {
         val mutableLiveData = MutableLiveData<String>()
 
         // When
-        mutableLiveData.postValue("test")
+        mutableLiveData.value = TEST_VALUE
 
         // Then
-        assertThat(mutableLiveData.value, equalTo("test"))
+        assertThat(mutableLiveData.value, equalTo(TEST_VALUE))
     }
 
     /**

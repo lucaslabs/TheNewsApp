@@ -9,7 +9,7 @@ import com.thenewsapp.data.net.model.Resource
 import kotlinx.coroutines.launch
 
 class SharedNewsViewModel(
-    private val savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle?,
     private val newsService: NewsService
 ) : ViewModel() {
 
@@ -49,9 +49,9 @@ class SharedNewsViewModel(
 
     fun getSelectedNews() = _selectedNews.value
 
-    fun getQuery() = savedStateHandle.get<String>(QUERY_KEY)
+    fun getQuery() = savedStateHandle?.get<String>(QUERY_KEY)
 
-    private fun saveQuery(query: String) = savedStateHandle.set(QUERY_KEY, query)
+    private fun saveQuery(query: String) = savedStateHandle?.set(QUERY_KEY, query)
 
     class Factory(
         owner: SavedStateRegistryOwner,
