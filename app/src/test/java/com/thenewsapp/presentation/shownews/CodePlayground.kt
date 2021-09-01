@@ -5,6 +5,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import kotlin.math.abs
 
 @RunWith(JUnit4::class)
 class CodePlayground {
@@ -54,5 +55,46 @@ class CodePlayground {
             } ?: run { diffMap[num] = index }
         }
         return intArrayOf()
+    }
+
+    /**
+     * Reverse Integer: Given a signed 32-bit integer x, return x with its digits reversed.
+     * If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1],
+     * then return 0.
+     * Assume the environment does not allow you to store 64-bit integers (signed or unsigned).
+     */
+    @Test
+    fun reverseInteger() {
+        // Given
+        val x = -123
+
+        // When
+        val output = reverseIntegerBest(x)
+
+        // Then
+        assertThat(output, equalTo(-321))
+    }
+
+    private fun reverseInteger(x: Int): Int {
+        return try {
+            if (x >= 0) {
+                x.toString().reversed().toInt()
+            } else {
+                val y = x.toString().substring(1).reversed().toInt()
+                y * -1
+            }
+        } catch (e: Exception) {
+            0
+        }
+    }
+
+    private fun reverseIntegerBest(x: Int): Int {
+        return try {
+            var reversedNum = abs(x).toString().reversed().toInt()
+            if (x < 0) reversedNum *= -1
+            reversedNum
+        } catch (e: Exception) {
+            0
+        }
     }
 }
