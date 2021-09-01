@@ -97,4 +97,49 @@ class CodePlayground {
             0
         }
     }
+
+    /**
+     * Given an integer x, return true if x is palindrome integer.
+     * An integer is a palindrome when it reads the same backward as forward.
+     * For example, 121 is palindrome while 123 is not.
+     */
+    @Test
+    fun isPalindrome() {
+        // Given
+        val x = 121
+
+        // When
+        val output = isPalindromeBest(x)
+
+        // Then
+        assertThat(output, equalTo(true))
+    }
+
+    private fun isPalindrome(x: Int): Boolean {
+        val output = false
+        val str = x.toString()
+        for (i in 0..str.length - 1) {
+            for (j in str.length - (1 + i) downTo 0) {
+                if (i >= j) return true
+                if (str[i] != str[j]) {
+                    return false
+                } else break
+            }
+        }
+        return output
+    }
+
+    private fun isPalindromeBest(x: Int): Boolean {
+        val str = "$x"
+        for (i in 0..(str.length / 2)) {
+            if (str[i] != str[str.length - (1 + i)]) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun isPalindromeCheat(x: Int): Boolean {
+        return "$x" == "$x".reversed()
+    }
 }
