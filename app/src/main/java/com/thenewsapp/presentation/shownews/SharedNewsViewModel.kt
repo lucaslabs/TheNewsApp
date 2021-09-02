@@ -30,8 +30,8 @@ class SharedNewsViewModel(
             try {
                 _news.value = Resource.Loading()
                 val response = newsService.searchNews(query)
-                if (response.isSuccessful && response.body() != null) {
-                    _news.value = Resource.Success(response.body()!!.news)
+                if (response.isSuccessful) {
+                    response.body()?.let { _news.value = Resource.Success(it.news)  }
                 } else {
                     _news.value = Resource.Error(response.message())
                 }

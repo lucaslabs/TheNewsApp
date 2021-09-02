@@ -1,6 +1,7 @@
 package com.thenewsapp.presentation.shownews
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.thenewsapp.data.NewsService
@@ -122,16 +123,24 @@ class SharedNewsViewModelTest {
 
         // When
         viewModel.searchNews(VALID_QUERY)
-        val actualNews = viewModel.news.value
+
+//        val actualNews = viewModel.news.value
 
         // Then
-        assertThat(actualNews?.data, equalTo(expectedNews))
+//        assertThat(actualNews?.data, equalTo(expectedNews))
+//
+//        verify(observer, times(1)).onChanged(isA(Resource.Loading::class.java))
+//        verify(observer, times(1)).onChanged(isA(Resource.Success::class.java))
+//        verify(observer, never()).onChanged(isA(Resource.Error::class.java))
+//
+//        verifyNoMoreInteractions(observer)
 
-        verify(observer, times(1)).onChanged(isA(Resource.Loading::class.java))
-        verify(observer, times(1)).onChanged(isA(Resource.Success::class.java))
-        verify(observer, never()).onChanged(isA(Resource.Error::class.java))
-
-        verifyNoMoreInteractions(observer)
+        viewModel.news.observeForTesting {
+            // Then
+            // TODO Get task from a Delegate component (Interactor, Use Case, Repository, etc)
+            val actualNews = viewModel.news.value?.data
+            assertThat(actualNews, equalTo(expectedNews))
+        }
     }
 
     @Test
@@ -155,5 +164,18 @@ class SharedNewsViewModelTest {
         verify(observer, never()).onChanged(isA(Resource.Success::class.java))
 
         verifyNoMoreInteractions(observer)
+    }
+
+    /**
+     * Observes a [LiveData] until the `block` is done executing.
+     */
+    fun <T> LiveData<T>.observeForTesting(block: () -> Unit) {
+        val observer = Observer<T> { }
+        try {
+            observeForever(observer)
+            block()
+        } finally {
+            removeObserver(observer)
+        }
     }
 }
