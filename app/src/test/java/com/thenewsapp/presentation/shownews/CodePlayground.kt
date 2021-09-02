@@ -156,7 +156,7 @@ class CodePlayground {
         val s = "MCMXCIV"
 
         // When
-        val output = romanToIntBest(s)
+        val output = romanToInt2(s)
 
         // Then
         assertThat(output, equalTo(1994))
@@ -258,5 +258,39 @@ class CodePlayground {
         'D' -> 500
         'M' -> 1000
         else -> throw Exception("Unexpected letter $letter")
+    }
+
+    private fun romanToInt2(s: String) : Int {
+        var output = 0
+        var prev: Char? = null
+        for (i in s.length - 1 downTo 0) {
+            val c = s[i]
+            when (c) {
+                'I' -> {
+                    output += when (prev) {
+                        'V', 'X' -> -1
+                        else -> 1
+                    }
+                }
+                'V' -> output += 5
+                'X' -> {
+                    output += when (prev) {
+                        'L', 'C' -> -10
+                        else -> 10
+                    }
+                }
+                'L' -> output += 50
+                'C' -> {
+                    output += when (prev) {
+                        'D', 'M' -> -100
+                        else -> 100
+                    }
+                }
+                'D' -> output += 500
+                'M' -> output += 1000
+            }
+            prev = c
+        }
+        return output
     }
 }
