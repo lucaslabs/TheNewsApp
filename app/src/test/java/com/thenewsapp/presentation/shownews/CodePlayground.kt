@@ -142,4 +142,121 @@ class CodePlayground {
     private fun isPalindromeCheat(x: Int): Boolean {
         return "$x" == "$x".reversed()
     }
+
+    /**
+     * Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+     *
+     * I can be placed before V (5) and X (10) to make 4 and 9.
+     * X can be placed before L (50) and C (100) to make 40 and 90.
+     * C can be placed before D (500) and M (1000) to make 400 and 900.
+     */
+    @Test
+    fun romanToInt() {
+        // Given
+        val s = "MCMXCIV"
+
+        // When
+        val output = romanToIntBest(s)
+
+        // Then
+        assertThat(output, equalTo(1994))
+    }
+
+    private fun romanToInt(s: String): Int {
+        var output = 0
+        s.forEachIndexed { i, char ->
+            when (char) {
+                'I' -> {
+                    output += 1
+                }
+                'V' -> {
+                    try {
+                        val prev = s[i - 1]
+                        if (prev == 'I') output += 3 else output += 5
+                    } catch (e: Exception) {
+                        output += 5
+                    }
+                }
+                'X' -> {
+                    try {
+                        val prev = s[i - 1]
+                        if (prev == 'I') output += 8 else output += 10
+                    } catch (e: Exception) {
+                        output += 10
+                    }
+                }
+                'L' -> {
+                    try {
+                        val prev = s[i - 1]
+                        if (prev == 'X') output += 30 else output += 50
+                    } catch (e: Exception) {
+                        output += 50
+                    }
+                }
+                'C' -> {
+                    try {
+                        val prev = s[i - 1]
+                        if (prev == 'X') output += 80 else output += 100
+                    } catch (e: Exception) {
+                        output += 100
+                    }
+                }
+                'D' -> {
+                    try {
+                        val prev = s[i - 1]
+                        if (prev == 'C') output += 300 else output += 500
+                    } catch (e: Exception) {
+                        output += 500
+                    }
+                }
+                'M' -> {
+                    try {
+                        val prev = s[i - 1]
+                        if (prev == 'C') output += 800 else output += 1000
+                    } catch (e: Exception) {
+                        output += 1000
+                    }
+                }
+            }
+
+        }
+        return output
+    }
+
+    private fun romanToIntBest(s: String): Int {
+        var m1Value = 0
+        var m2Value = 0
+
+        var result = 0
+
+        for(i in s.length - 1 downTo 0) {
+            val letter = s[i]
+
+            val value = getValue(letter)
+
+            if(value >= m1Value) {
+                result += value
+            } else if ( m1Value >= m2Value ) {
+                result -= value
+            } else {
+                throw Exception("Wrong number")
+            }
+
+            m2Value = m1Value
+            m1Value = value
+        }
+
+        return result
+    }
+
+    fun getValue(letter: Char) = when(letter) {
+        'I' -> 1
+        'V' -> 5
+        'X' -> 10
+        'L' -> 50
+        'C' -> 100
+        'D' -> 500
+        'M' -> 1000
+        else -> throw Exception("Unexpected letter $letter")
+    }
 }
