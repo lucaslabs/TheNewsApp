@@ -170,51 +170,51 @@ class CodePlayground {
                     output += 1
                 }
                 'V' -> {
-                    try {
+                    output += try {
                         val prev = s[i - 1]
-                        if (prev == 'I') output += 3 else output += 5
+                        if (prev == 'I') 3 else 5
                     } catch (e: Exception) {
-                        output += 5
+                        5
                     }
                 }
                 'X' -> {
-                    try {
+                    output += try {
                         val prev = s[i - 1]
-                        if (prev == 'I') output += 8 else output += 10
+                        if (prev == 'I') 8 else 10
                     } catch (e: Exception) {
-                        output += 10
+                        10
                     }
                 }
                 'L' -> {
-                    try {
+                    output += try {
                         val prev = s[i - 1]
-                        if (prev == 'X') output += 30 else output += 50
+                        if (prev == 'X') 30 else 50
                     } catch (e: Exception) {
-                        output += 50
+                        50
                     }
                 }
                 'C' -> {
-                    try {
+                    output += try {
                         val prev = s[i - 1]
-                        if (prev == 'X') output += 80 else output += 100
+                        if (prev == 'X') 80 else 100
                     } catch (e: Exception) {
-                        output += 100
+                        100
                     }
                 }
                 'D' -> {
-                    try {
+                    output += try {
                         val prev = s[i - 1]
-                        if (prev == 'C') output += 300 else output += 500
+                        if (prev == 'C') 300 else 500
                     } catch (e: Exception) {
-                        output += 500
+                        500
                     }
                 }
                 'M' -> {
-                    try {
+                    output += try {
                         val prev = s[i - 1]
-                        if (prev == 'C') output += 800 else output += 1000
+                        if (prev == 'C') 800 else 1000
                     } catch (e: Exception) {
-                        output += 1000
+                        1000
                     }
                 }
             }
