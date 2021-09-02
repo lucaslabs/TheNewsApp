@@ -229,14 +229,14 @@ class CodePlayground {
 
         var result = 0
 
-        for(i in s.length - 1 downTo 0) {
+        for (i in s.length - 1 downTo 0) {
             val letter = s[i]
 
             val value = getValue(letter)
 
-            if(value >= m1Value) {
+            if (value >= m1Value) {
                 result += value
-            } else if ( m1Value >= m2Value ) {
+            } else if (m1Value >= m2Value) {
                 result -= value
             } else {
                 throw Exception("Wrong number")
@@ -249,7 +249,7 @@ class CodePlayground {
         return result
     }
 
-    fun getValue(letter: Char) = when(letter) {
+    fun getValue(letter: Char) = when (letter) {
         'I' -> 1
         'V' -> 5
         'X' -> 10
@@ -260,7 +260,7 @@ class CodePlayground {
         else -> throw Exception("Unexpected letter $letter")
     }
 
-    private fun romanToInt2(s: String) : Int {
+    private fun romanToInt2(s: String): Int {
         var output = 0
         var prev: Char? = null
         for (i in s.length - 1 downTo 0) {
@@ -292,5 +292,64 @@ class CodePlayground {
             prev = c
         }
         return output
+    }
+
+    /**
+     * Write a function to find the longest common prefix string amongst an array of strings.
+     * If there is no common prefix, return an empty string "".
+     */
+    @Test
+    fun longestCommonPrefix() {
+        // Given
+        val strs = arrayOf("flower","flower","flower","flower")
+
+        // When
+        val output = longestCommonPrefixBest(strs)
+
+        // Then
+        assertThat(output, equalTo("flower"))
+    }
+
+    private fun longestCommonPrefix(strs: Array<String>): String {
+        val builder = StringBuilder(strs[0])
+        var currentStr: String? = null
+        var nextStr: String? = null
+        for (i in 0 until strs.size - 1) {
+            currentStr = if (currentStr == null) {
+                strs[i]
+            } else builder.toString()
+
+            nextStr = strs[i + 1]
+
+            builder.clear()
+
+            for (j in currentStr.indices) {
+                try {
+                    if (currentStr[j] == nextStr[j]) {
+                        builder.append(currentStr[j])
+                    } else break
+                } catch (e: Exception) {
+                }
+            }
+        }
+        return builder.toString()
+    }
+
+    private fun longestCommonPrefixBest(strs: Array<String>): String {
+        val longestPrefix = strs[0]
+        var longestCommonPrefix = ""
+
+        for (i in longestPrefix.indices) {
+            val singlePrefix = longestPrefix[i]
+
+            for (j in 1 until strs.size) {
+                if (i == strs[j].length || strs[j][i] != singlePrefix) {
+                    return longestCommonPrefix
+                }
+            }
+            longestCommonPrefix += singlePrefix
+        }
+
+        return longestCommonPrefix
     }
 }
