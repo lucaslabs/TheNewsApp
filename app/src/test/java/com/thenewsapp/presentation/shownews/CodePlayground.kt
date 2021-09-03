@@ -11,7 +11,8 @@ import kotlin.math.abs
 class CodePlayground {
 
     /**
-     * Two sum: Given an array of integers nums and an integer target,
+     * Two Sum:
+     * Given an array of integers nums and an integer target,
      * return indices of the two numbers such that they add up to target.
      * You may assume that each input would have exactly one solution,
      * and you may not use the same element twice.
@@ -58,7 +59,8 @@ class CodePlayground {
     }
 
     /**
-     * Reverse Integer: Given a signed 32-bit integer x, return x with its digits reversed.
+     * Reverse Integer:
+     * Given a signed 32-bit integer x, return x with its digits reversed.
      * If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1],
      * then return 0.
      * Assume the environment does not allow you to store 64-bit integers (signed or unsigned).
@@ -99,6 +101,7 @@ class CodePlayground {
     }
 
     /**
+     * Palindrome Number:
      * Given an integer x, return true if x is palindrome integer.
      * An integer is a palindrome when it reads the same backward as forward.
      * For example, 121 is palindrome while 123 is not.
@@ -144,6 +147,7 @@ class CodePlayground {
     }
 
     /**
+     * Roman to Integer:
      * Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
      *
      * I can be placed before V (5) and X (10) to make 4 and 9.
@@ -295,13 +299,14 @@ class CodePlayground {
     }
 
     /**
+     * Longest Common Prefix:
      * Write a function to find the longest common prefix string amongst an array of strings.
      * If there is no common prefix, return an empty string "".
      */
     @Test
     fun longestCommonPrefix() {
         // Given
-        val strs = arrayOf("flower","flower","flower","flower")
+        val strs = arrayOf("flower", "flower", "flower", "flower")
 
         // When
         val output = longestCommonPrefixBest(strs)
@@ -351,5 +356,80 @@ class CodePlayground {
         }
 
         return longestCommonPrefix
+    }
+
+
+    /**
+     * Valid Parentheses:
+     * Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+     * An input string is valid if:
+     * Open brackets must be closed by the same type of brackets.
+     * Open brackets must be closed in the correct order.
+     */
+    @ExperimentalStdlibApi
+    @Test
+    fun validParentheses() {
+        // Given
+        // "()[]{}"
+        // "{[]}"
+        // "(]"
+        // "([)]"
+        // "(["
+        val s = "()[]{}"
+
+        // When
+        val output = isValidBest(s)
+
+        //Then
+        assertThat(output, equalTo(true))
+    }
+
+    @ExperimentalStdlibApi
+    fun isValid(s: String): Boolean {
+        val stack = ArrayDeque<Char>()
+        s.forEach { c ->
+            if (isOpeningChar(c)) {
+                stack.add(c)
+            } else {
+                // Is closing char
+                if (stack.isEmpty()) return false
+                else {
+                    val prev = stack.removeLast()
+                    val openingChar = getOpeningCharByClosingChar(c)
+                    if (prev != openingChar) return false
+                }
+            }
+        }
+        return stack.isEmpty()
+    }
+
+    private fun isOpeningChar(c: Char): Boolean {
+        return when (c) {
+            '(', '[', '{' -> true
+            else -> false
+        }
+    }
+
+    private fun getOpeningCharByClosingChar(closingChar: Char) = when (closingChar) {
+        ')' -> '('
+        ']' -> '['
+        '}' -> '{'
+        else -> throw Exception("Unexpected char $closingChar")
+    }
+
+    @ExperimentalStdlibApi
+    private fun isValidBest(s: String): Boolean {
+        val stack = ArrayDeque<Char>()
+        s.forEach { c ->
+            if (c == '(')
+                stack.add(')');
+            else if (c == '{')
+                stack.add('}');
+            else if (c == '[')
+                stack.add(']');
+            else if (stack.isEmpty() || stack.removeLast() != c)
+                return false
+        }
+        return stack.isEmpty()
     }
 }
