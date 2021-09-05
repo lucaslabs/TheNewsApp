@@ -1,6 +1,7 @@
 package com.thenewsapp.presentation.shownews
 
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -431,5 +432,44 @@ class CodePlayground {
                 return false
         }
         return stack.isEmpty()
+    }
+
+    @Test
+    fun createTestList() {
+        // Given
+        val nums = intArrayOf(1, 2, 3)
+
+        // When
+        val output = createList(nums)
+
+        // Then
+        assertThat(output, notNullValue())
+        assertThat(output?.num, equalTo(1))
+        assertThat(output?.next, notNullValue())
+        assertThat(output?.next?.num, equalTo(2))
+        assertThat(output?.next?.next, notNullValue())
+        assertThat(output?.next?.next?.num, equalTo(3))
+    }
+
+    private fun createList(nums: IntArray): ListNode? {
+        var aux: ListNode? = ListNode(-1)
+        val root = aux
+
+        for (i in 0 until nums.size) {
+            val node = ListNode(nums[i])
+            aux?.next = node // linking to next node
+            aux = aux?.next // moving to next node
+        }
+
+        printList(root?.next)
+        return root?.next
+    }
+
+    private fun printList(root: ListNode?) {
+        var aux: ListNode? = root
+        while (aux != null) {
+            println("num ${aux.num}")
+            aux = aux.next
+        }
     }
 }
