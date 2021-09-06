@@ -1,3 +1,3 @@
 package com.thenewsapp.presentation.shownews
 
-class ListNode(val num: Int, var next: ListNode? = null)
+class ListNode(var num: Int, var next: ListNode? = null)
