@@ -6,7 +6,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import kotlin.math.abs
 
 @RunWith(JUnit4::class)
 class ListsPlayground {
@@ -28,14 +27,13 @@ class ListsPlayground {
         assertThat(output?.next?.next?.num, equalTo(3))
     }
 
-
     @Test
     fun sortList() {
         // Given
         val list = createList(intArrayOf(3, 2, 1))
 
         // When
-        val output = sortList(list)
+        val output = sortListByValue(list)
 
         // Then
         assertThat(output, notNullValue())
@@ -46,8 +44,8 @@ class ListsPlayground {
         assertThat(output?.next?.next?.num, equalTo(3))
     }
 
-    // Swapping values
-    private fun sortList(list: ListNode?): ListNode? {
+    // Bubble sort & swapping values
+    private fun sortListByValue(list: ListNode?): ListNode? {
         var current = list
 
         while (current != null) {
@@ -76,6 +74,7 @@ class ListsPlayground {
             aux?.next = node // linking to next node
             aux = aux?.next // moving to next node
         }
+
         printList(root?.next)
         return root?.next
     }
