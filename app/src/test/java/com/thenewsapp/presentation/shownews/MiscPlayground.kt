@@ -1,7 +1,6 @@
 package com.thenewsapp.presentation.shownews
 
 import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -122,7 +121,7 @@ class MiscPlayground {
     private fun isPalindrome(x: Int): Boolean {
         val output = false
         val str = x.toString()
-        for (i in 0..str.length - 1) {
+        for (i in str.indices) {
             for (j in str.length - (1 + i) downTo 0) {
                 if (i >= j) return true
                 if (str[i] != str[j]) {
@@ -158,13 +157,13 @@ class MiscPlayground {
     @Test
     fun romanToInt() {
         // Given
-        val s = "MCMXCIV"
+        val s = "IX"
 
         // When
         val output = romanToInt2(s)
 
         // Then
-        assertThat(output, equalTo(1994))
+        assertThat(output, equalTo(9))
     }
 
     private fun romanToInt(s: String): Int {
@@ -269,7 +268,7 @@ class MiscPlayground {
         var output = 0
         var prev: Char? = null
         for (i in s.length - 1 downTo 0) {
-            val c = s[i]
+            val c = s[i] // current char
             when (c) {
                 'I' -> {
                     output += when (prev) {
@@ -294,7 +293,7 @@ class MiscPlayground {
                 'D' -> output += 500
                 'M' -> output += 1000
             }
-            prev = c
+            prev = c // previous char
         }
         return output
     }
@@ -320,7 +319,7 @@ class MiscPlayground {
         val builder = StringBuilder(strs[0])
         var currentStr: String? = null
         var nextStr: String?
-        for (i in 0 until strs.size - 1) {
+        for (i in strs.indices) {
             currentStr = if (currentStr == null) {
                 strs[i]
             } else builder.toString()
@@ -432,5 +431,56 @@ class MiscPlayground {
                 return false
         }
         return stack.isEmpty()
+    }
+
+    /**
+     * Remove Duplicates from Sorted Array:
+     * Given an integer array nums sorted in non-decreasing order,
+     * remove the duplicates in-place such that each unique element appears only once.
+     * The relative order of the elements should be kept the same.
+     */
+    @Test
+    fun removeDuplicates() {
+        // Given
+        val nums = intArrayOf(0, 0, 1, 1, 1, 2, 2, 3, 3, 4)
+        val expectedNums = intArrayOf(0, 1, 2, 3, 4)
+
+        // When
+        val k = removeDuplicatesBest(nums)
+
+        // Then
+        assertThat(k, equalTo(expectedNums.size))
+        for (i in 0 until k) {
+            assertThat(nums[i], equalTo(expectedNums[i]))
+        }
+    }
+
+    fun removeDuplicates(nums: IntArray): Int {
+        var k = 0
+
+        for (i in 0 until nums.size) {
+            for (j in (i + 1) until nums.size) {
+                if (nums[i] == -101) {
+                    nums[i] = nums[j]
+                    nums[j] = -101
+                } else if (nums[i] == nums[j]) {
+                    nums[j] = -101
+                }
+            }
+            if (nums[i] != -101) {
+                k++
+            }
+        }
+
+        return k
+    }
+
+    fun removeDuplicatesBest(nums: IntArray): Int {
+        var i = 0
+        for (j in 1 until nums.size) {
+            if (nums[j] != nums[i])
+                nums[++i] = nums[j]
+        }
+        return i + 1
     }
 }
