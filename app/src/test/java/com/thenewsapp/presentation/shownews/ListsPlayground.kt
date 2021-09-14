@@ -65,6 +65,54 @@ class ListsPlayground {
         return list
     }
 
+    /**
+     * Merge two sorted linked lists and return it as a sorted list.
+     * The list should be made by splicing together the nodes of the first two lists.
+     */
+    @Test
+    fun mergeTwoLists() {
+        // Given
+        val list1 = createList(intArrayOf(1, 2, 4))
+        val list2 = createList(intArrayOf(1, 3, 4))
+        val expectedNums = intArrayOf(1, 1, 2, 3, 4, 4)
+
+        // When
+        var output = mergeTwoLists(list1, list2)
+
+        // Then
+        assertThat(output, notNullValue())
+        expectedNums.forEachIndexed { index, num ->
+            assertThat(num, equalTo(output?.num))
+            output = output?.next
+        }
+    }
+
+    private fun mergeTwoLists(l1: ListNode?, l2: ListNode?): ListNode? {
+        var list1 = l1
+        var list2 = l2
+        var aux = ListNode(-1)
+        val root = aux
+
+        while (list1 != null && list2 != null) {
+            if (list1.num < list2.num) {
+                aux.next = list1
+                list1 = list1.next
+            } else {
+                aux.next = list2
+                list2 = list2.next
+            }
+            aux.next?.let { aux = it }
+        }
+
+        if (list1 != null) {
+            aux.next = list1
+        } else {
+            aux.next = list2
+        }
+
+        return root.next
+    }
+
     private fun createList(nums: IntArray): ListNode? {
         var aux: ListNode? = ListNode(-1)
         val root = aux

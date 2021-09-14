@@ -455,7 +455,7 @@ class MiscPlayground {
         }
     }
 
-    fun removeDuplicates(nums: IntArray): Int {
+    private fun removeDuplicates(nums: IntArray): Int {
         var k = 0
 
         for (i in 0 until nums.size) {
@@ -475,7 +475,7 @@ class MiscPlayground {
         return k
     }
 
-    fun removeDuplicatesBest(nums: IntArray): Int {
+    private fun removeDuplicatesBest(nums: IntArray): Int {
         var i = 0
         for (j in 1 until nums.size) {
             if (nums[j] != nums[i])
