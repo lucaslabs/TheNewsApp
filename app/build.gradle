@@ -1,11 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion build_versions.compile_sdk
-    buildToolsVersion build_versions.build_tools
 
     defaultConfig {
         applicationId "com.thenewsapp"
@@ -26,10 +24,16 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
+        useIR = true
     }
 
-    viewBinding {
-        enabled = true
+    buildFeatures {
+        compose true
+        viewBinding true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion versions.compose
     }
 
     buildTypes {
@@ -51,7 +55,15 @@ dependencies {
     kapt deps.glide.compiler
 
     implementation deps.app_compat
+    implementation deps.compose.activity
+    implementation deps.compose.material
+    implementation deps.compose.ui
+    implementation deps.compose.activity
     implementation deps.constraint_layout
+    implementation deps.compose.activity
+    implementation deps.compose.material
+    implementation deps.compose.tooling
+    implementation deps.compose.ui
     implementation deps.core_ktx
     implementation deps.coroutines.core
     implementation deps.coroutines.android
@@ -67,6 +79,7 @@ dependencies {
     implementation deps.retrofit.gson
     implementation deps.retrofit.mock
 
+    // Testing
     testImplementation deps.arch_core.testing
     testImplementation deps.hamcrest
     testImplementation deps.junit

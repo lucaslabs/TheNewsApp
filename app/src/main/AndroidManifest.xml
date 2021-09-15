@@ -13,13 +13,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".presentation.MainActivity"
-            android:windowSoftInputMode="stateHidden">
+            android:name=".presentation.compose.ComposeActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".presentation.MainActivity"
+            android:windowSoftInputMode="stateHidden">
         </activity>
     </application>
 
