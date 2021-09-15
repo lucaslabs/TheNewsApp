@@ -77,7 +77,7 @@ class ListsPlayground {
         val expectedNums = intArrayOf(1, 1, 2, 3, 4, 4)
 
         // When
-        var output = mergeTwoLists(list1, list2)
+        var output = mergeTwoListsBest(list1, list2)
 
         // Then
         assertThat(output, notNullValue())
@@ -111,6 +111,25 @@ class ListsPlayground {
         }
 
         return root.next
+    }
+
+    // Recursive
+    fun mergeTwoListsBest(l1: ListNode?, l2: ListNode?): ListNode? {
+        if (l1 == null && l2 == null) {
+            return null
+        }
+        if (l1 == null) {
+            return l2
+        }
+        if (l2 == null) {
+            return l1
+        }
+        if (l1.num < l2.num) {
+            l1.next = mergeTwoLists(l1.next, l2)
+            return l1
+        }
+        l2.next = mergeTwoLists(l2.next, l1)
+        return l2
     }
 
     private fun createList(nums: IntArray): ListNode? {
