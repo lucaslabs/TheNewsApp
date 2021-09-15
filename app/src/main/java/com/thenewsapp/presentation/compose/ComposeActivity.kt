@@ -8,8 +8,8 @@ import androidx.compose.material.Text
 class ComposeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { 
-            Text(text = "Hello Compose World!")
+        setContent {
+           ScreenContent(listOf("Lucas", "Gabriela", "Franco"))
         }
     }
 }
