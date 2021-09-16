@@ -14,7 +14,9 @@ class GreetingViewModel : ViewModel() {
     val counter: LiveData<CounterState> = _counter
 
     init {
-        _names.value = listOf("Lucas", "Gabriela", "Franco")
+        _names.value = List(1000) {
+            "Hello #$it"
+        }
     }
 
     fun onCounterClick(count: Int) {
