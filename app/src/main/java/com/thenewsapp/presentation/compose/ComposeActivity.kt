@@ -1,15 +1,33 @@
 package com.thenewsapp.presentation.compose
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.material.Text
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.graphics.Color
 
 class ComposeActivity : AppCompatActivity() {
+
+    private val viewModel: GreetingViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-           ScreenContent(listOf("Lucas", "Gabriela", "Franco"))
+            // States
+            val namesState by viewModel.names.observeAsState(listOf())
+            val counterState by viewModel.counter.observeAsState(CounterState(0, Color.Blue))
+
+            // Screen
+            GreetingScreen(
+                namesState,
+                counterState,
+                onCounterClick = { count ->
+                    viewModel.onCounterClick(count)
+                }
+            )
         }
     }
 }

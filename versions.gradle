@@ -46,6 +46,7 @@ deps.arch_core = arch_core
 
 def compose = [:]
 compose.activity = "androidx.activity:activity-compose:$versions.compose_activity"
+compose.livedata = "androidx.compose.runtime:runtime-livedata:$versions.compose"
 compose.material = "androidx.compose.material:material:$versions.compose"
 compose.tooling = "androidx.compose.ui:ui-tooling:$versions.compose"
 compose.ui = "androidx.compose.ui:ui:$versions.compose"
