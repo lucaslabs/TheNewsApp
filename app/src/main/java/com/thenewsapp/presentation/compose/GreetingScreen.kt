@@ -1,19 +1,21 @@
 package com.thenewsapp.presentation.compose
 
 import android.widget.Toast
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun GreetingScreen(
@@ -49,7 +51,19 @@ fun NameList(namesState: List<String>, modifier: Modifier = Modifier) {
 // region Components
 @Composable
 fun Greeting(name: String) {
-    Text(text = name)
+    var isSelected by remember { mutableStateOf(false) }
+    val backgroundColor by animateColorAsState(
+        if (isSelected) MaterialTheme.colors.primary
+        else Color.Transparent
+    )
+
+    Text(
+        text = name,
+        modifier = Modifier
+            .padding(12.dp)
+            .background(backgroundColor)
+            .clickable { isSelected = !isSelected }
+    )
 }
 
 @Composable
@@ -66,9 +80,11 @@ fun Counter(state: CounterState, modifier: Modifier = Modifier, onCounterClick: 
 @Preview(showBackground = true)
 @Composable
 fun Preview() {
-    GreetingScreen(
-        listOf("Hello #1", "Hello #2", "Hello #3"),
-        CounterState(0, Color.Blue),
-        {}
-    )
+    BasicsTheme {
+        GreetingScreen(
+            listOf("Hello #1", "Hello #2", "Hello #3"),
+            CounterState(0, Color.Blue),
+            {}
+        )
+    }
 }

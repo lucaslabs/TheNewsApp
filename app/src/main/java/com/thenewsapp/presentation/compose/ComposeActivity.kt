@@ -20,14 +20,18 @@ class ComposeActivity : AppCompatActivity() {
             val namesState by viewModel.names.observeAsState(listOf())
             val counterState by viewModel.counter.observeAsState(CounterState(0, Color.Blue))
 
-            // Screen
-            GreetingScreen(
-                namesState,
-                counterState,
-                onCounterClick = { count ->
-                    viewModel.onCounterClick(count)
-                }
-            )
+            // Theme
+            BasicsTheme {
+
+                // Screen
+                GreetingScreen(
+                    namesState,
+                    counterState,
+                    onCounterClick = { count ->
+                        viewModel.onCounterClick(count)
+                    }
+                )
+            }
         }
     }
 }
