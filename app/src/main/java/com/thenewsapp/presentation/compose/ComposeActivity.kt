@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 
 class ComposeActivity : AppCompatActivity() {
@@ -17,15 +18,18 @@ class ComposeActivity : AppCompatActivity() {
 
         setContent {
             // States
-            val namesState by viewModel.names.observeAsState(listOf())
-            val counterState by viewModel.counter.observeAsState(CounterState(0, Color.Blue))
+            val greetingItems = remember { viewModel.greetingItems }
+            val counterState by viewModel.counter.observeAsState(Counter(0, Color.Blue))
 
             // Theme
             BasicsTheme {
 
                 // Screen
                 GreetingScreen(
-                    namesState,
+                    greetingItems,
+                    onItemClick = { position, greetingItem ->
+                        viewModel.onItemClick(position, greetingItem)
+                    },
                     counterState,
                     onCounterClick = { count ->
                         viewModel.onCounterClick(count)
