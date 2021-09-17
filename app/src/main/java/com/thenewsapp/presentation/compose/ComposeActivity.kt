@@ -26,14 +26,14 @@ class ComposeActivity : AppCompatActivity() {
 
                 // Screen
                 GreetingScreen(
-                    greetingItems,
+                    greetingItems = greetingItems,
                     onItemClick = { position, greetingItem ->
                         viewModel.onItemClick(position, greetingItem)
                     },
-                    counterState,
+                    counter = counterState,
                     onCounterClick = { count ->
                         viewModel.onCounterClick(count)
-                    }
+                    },
                 )
             }
         }

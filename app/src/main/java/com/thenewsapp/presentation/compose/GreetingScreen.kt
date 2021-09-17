@@ -23,7 +23,7 @@ fun GreetingScreen(
     greetingItems: List<GreetingItem>,
     onItemClick: (Int, GreetingItem) -> Unit,
     counter: Counter,
-    onCounterClick: (Int) -> Unit
+    onCounterClick: (Int) -> Unit,
 ) {
     Toast.makeText(
         LocalContext.current,
@@ -32,9 +32,9 @@ fun GreetingScreen(
     ).show()
     Column(modifier = Modifier.fillMaxHeight()) {
         GreetingList(
-            greetingItems,
+            greetingItems = greetingItems,
             onItemClick = onItemClick,
-            modifier = Modifier.Companion.weight(1f)
+            modifier = Modifier.Companion.weight(1f),
         )
         Counter(
             counter = counter,
@@ -47,11 +47,15 @@ fun GreetingScreen(
 fun GreetingList(
     greetingItems: List<GreetingItem>,
     onItemClick: (Int, GreetingItem) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
-        itemsIndexed(greetingItems) { position, item ->
-            GreetingItem(position, item, onItemClick)
+        itemsIndexed(items = greetingItems) { position, item ->
+            GreetingItem(
+                position = position,
+                item = item,
+                onItemClick = onItemClick
+            )
             Divider(color = Color.Black)
         }
     }
@@ -63,7 +67,7 @@ fun GreetingItem(
     position: Int,
     item: GreetingItem,
     onItemClick: (Int, GreetingItem) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val backgroundColor by animateColorAsState(
         if (item.isSelected) MaterialTheme.colors.primary
@@ -82,7 +86,7 @@ fun GreetingItem(
 fun Counter(
     counter: Counter,
     onCounterClick: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Button(
         colors = ButtonDefaults.buttonColors(counter.color),
@@ -98,13 +102,13 @@ fun Counter(
 fun Preview() {
     BasicsTheme {
         GreetingScreen(
-            listOf(
+            greetingItems = listOf(
                 GreetingItem(1, "Hello #1"),
                 GreetingItem(2, "Hello #2"),
                 GreetingItem(3, "Hello #3")
             ),
             onItemClick = { _, _ -> },
-            Counter(0, Color.Blue),
+            counter = Counter(0, Color.Blue),
             onCounterClick = {}
         )
     }
