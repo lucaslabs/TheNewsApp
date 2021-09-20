@@ -81,8 +81,12 @@ fun Counter(
     onCounterClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val color by animateColorAsState(
+        if (counter.count % 2 == 0) MaterialTheme.colors.primary
+        else MaterialTheme.colors.secondary
+    )
     Button(
-        colors = ButtonDefaults.buttonColors(counter.color),
+        colors = ButtonDefaults.buttonColors(color),
         onClick = { onCounterClick(counter.count + 1) }
     ) {
         Text(text = "Clicked ${counter.count} times")
@@ -93,7 +97,7 @@ fun Counter(
 @Preview(showBackground = true)
 @Composable
 fun Preview() {
-    BasicsTheme {
+    BasicsTheme(darkTheme = true) {
         GreetingScreen(
             greetingItems = listOf(
                 GreetingItem(1, "Hello #1"),
@@ -101,7 +105,7 @@ fun Preview() {
                 GreetingItem(3, "Hello #3")
             ),
             onItemClick = { _, _ -> },
-            counter = Counter(0, Color.Blue),
+            counter = Counter(0),
             onCounterClick = {}
         )
     }
