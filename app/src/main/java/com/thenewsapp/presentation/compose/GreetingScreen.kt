@@ -97,7 +97,7 @@ fun Counter(
 @Preview(showBackground = true)
 @Composable
 fun Preview() {
-    BasicsTheme(darkTheme = true) {
+    BasicsTheme(darkTheme = false) {
         GreetingScreen(
             greetingItems = listOf(
                 GreetingItem(1, "Hello #1"),
