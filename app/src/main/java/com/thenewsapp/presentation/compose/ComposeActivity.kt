@@ -4,9 +4,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.graphics.Color
 
 class ComposeActivity : AppCompatActivity() {
 
@@ -18,7 +15,7 @@ class ComposeActivity : AppCompatActivity() {
         setContent {
             // States
             val greetingItems = viewModel.greetingItems
-            val counter by viewModel.counter.observeAsState(Counter(0, Color.Blue))
+            val counter = viewModel.counter
 
             // Theme
             BasicsTheme {
@@ -29,7 +26,7 @@ class ComposeActivity : AppCompatActivity() {
                     onItemClick = { position, greetingItem ->
                         viewModel.onItemClick(position, greetingItem)
                     },
-                    counter = counter,
+                    counter = counter.value,
                     onCounterClick = { count ->
                         viewModel.onCounterClick(count)
                     },

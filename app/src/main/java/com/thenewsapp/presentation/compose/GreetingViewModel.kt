@@ -1,18 +1,18 @@
 package com.thenewsapp.presentation.compose
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class GreetingViewModel : ViewModel() {
 
+    // Mutable states for Compose instead of LiveData.
     var greetingItems = mutableStateListOf<GreetingItem>()
         private set
 
-    private val _counter = MutableLiveData<Counter>()
-    val counter: LiveData<Counter> = _counter
+    var counter = mutableStateOf(Counter(0, Color.Blue))
+        private set
 
     init {
         List(1000) { id ->
@@ -27,6 +27,6 @@ class GreetingViewModel : ViewModel() {
 
     fun onCounterClick(count: Int) {
         val color = if (count % 2 == 0) Color.Blue else Color.Red
-        _counter.value = Counter(count, color)
+        counter.value = Counter(count, color)
     }
 }
