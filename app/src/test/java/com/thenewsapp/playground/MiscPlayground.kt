@@ -494,11 +494,11 @@ class MiscPlayground {
     fun removeElement() {
         // Given
         val nums = intArrayOf(0, 1, 2, 2, 3, 0, 4, 2)
-        val expectedNums = intArrayOf(0, 1, 4, 0, 3)
+        val expectedNums = intArrayOf(0, 1, 3, 0, 4)
         val target = 2
 
         // When
-        val k = removeElement(nums, target)
+        val k = removeElementBest(nums, target)
 
         // Then
         assertThat(k, equalTo(expectedNums.size))
@@ -509,13 +509,43 @@ class MiscPlayground {
 
     private fun removeElement(nums: IntArray, target: Int): Int {
         var k = 0
+        var shouldSwap = false
 
-        for(i in 0 until nums.size) {
+        for (i in 0 until nums.size) {
+
+            if (nums[i] == target || nums[i] == -101) {
+                shouldSwap = true
+            } else k++
+
             for (j in (i + 1) until nums.size) {
+                if (shouldSwap) {
+                    if (nums[j] != target && nums[j] != -101) {
+                        // Swap
+                        nums[i] = nums[j]
+                        nums[j] = -101
+                        shouldSwap = false
+                        k++
+                        break
+                    }
+                }
+            }
 
+            if (shouldSwap) {
+                nums[i] = -101
+                shouldSwap = false
             }
         }
 
+        return k
+    }
+
+    private fun removeElementBest(nums: IntArray, target: Int): Int {
+        var k = 0
+        nums.forEach {
+            if (it != target) {
+                nums[k++] = it
+            }
+        }
         return k
     }
 }
