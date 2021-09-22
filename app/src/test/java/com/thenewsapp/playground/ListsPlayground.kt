@@ -1,4 +1,4 @@
-package com.thenewsapp.presentation.shownews
+package com.thenewsapp.playground
 
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue

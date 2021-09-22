@@ -1,4 +1,4 @@
-package com.thenewsapp.presentation.shownews
+package com.thenewsapp.playground
 
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -482,5 +482,40 @@ class MiscPlayground {
                 nums[++i] = nums[j]
         }
         return i + 1
+    }
+
+    /**
+     * Remove Element:
+     * Given an integer array nums and an integer val,
+     * remove all occurrences of val in nums in-place.
+     * The relative order of the elements may be changed.
+     */
+    @Test
+    fun removeElement() {
+        // Given
+        val nums = intArrayOf(0, 1, 2, 2, 3, 0, 4, 2)
+        val expectedNums = intArrayOf(0, 1, 4, 0, 3)
+        val target = 2
+
+        // When
+        val k = removeElement(nums, target)
+
+        // Then
+        assertThat(k, equalTo(expectedNums.size))
+        for (i in 0 until k) {
+            assertThat(nums[i], equalTo(expectedNums[i]))
+        }
+    }
+
+    private fun removeElement(nums: IntArray, target: Int): Int {
+        var k = 0
+
+        for(i in 0 until nums.size) {
+            for (j in (i + 1) until nums.size) {
+
+            }
+        }
+
+        return k
     }
 }

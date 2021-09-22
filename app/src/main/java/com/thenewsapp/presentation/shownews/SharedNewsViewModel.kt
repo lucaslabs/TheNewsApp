@@ -3,14 +3,14 @@ package com.thenewsapp.presentation.shownews
 import android.os.Bundle
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
-import com.thenewsapp.data.NewsService
 import com.thenewsapp.data.model.News
 import com.thenewsapp.data.net.model.Resource
-import kotlinx.coroutines.launch
+import com.thenewsapp.data.net.model.Result
+import com.thenewsapp.data.repository.NewsRepository
 
 class SharedNewsViewModel(
     private val savedStateHandle: SavedStateHandle?,
-    private val newsService: NewsService
+    private val newsRepository: NewsRepository,
 ) : ViewModel() {
 
     companion object {
@@ -22,22 +22,17 @@ class SharedNewsViewModel(
 
     private val _selectedNews = MutableLiveData<News>()
 
-    fun searchNews(query: String) {
+    fun searchNews(query: String) = liveData {
+        emit(Result.Loading())
 
         saveQuery(query)
 
-        viewModelScope.launch {
-            try {
-                _news.value = Resource.Loading()
-                val response = newsService.searchNews(query)
-                if (response.isSuccessful) {
-                    response.body()?.let { _news.value = Resource.Success(it.news)  }
-                } else {
-                    _news.value = Resource.Error(response.message())
-                }
-            } catch (e: Exception) {
-                _news.value = Resource.Error(e.message)
-            }
+        runCatching {
+            newsRepository.searchNews(query)
+        }.onSuccess {
+            emit(Result.Success(it.news))
+        }.onFailure {
+            emit(Result.Error(it))
         }
     }
 
@@ -56,16 +51,16 @@ class SharedNewsViewModel(
     class Factory(
         owner: SavedStateRegistryOwner,
         defaultState: Bundle?,
-        private val newsService: NewsService
+        private val newsRepository: NewsRepository,
     ) : AbstractSavedStateViewModelFactory(owner, defaultState) {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(
             key: String,
             modelClass: Class<T>,
-            handle: SavedStateHandle
+            handle: SavedStateHandle,
         ): T {
-            return SharedNewsViewModel(handle, newsService) as T
+            return SharedNewsViewModel(handle, newsRepository) as T
         }
     }
 }

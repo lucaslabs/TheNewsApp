@@ -1,7 +1,6 @@
 package com.thenewsapp.data
 
 import com.thenewsapp.data.model.NewsResponse
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,5 +11,5 @@ interface NewsService {
     }
 
     @GET("/v2/everything")
-    suspend fun searchNews(@Query("q") query: String): Response<NewsResponse>
+    suspend fun searchNews(@Query("q") query: String): NewsResponse
 }

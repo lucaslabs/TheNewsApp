@@ -1,4 +1,4 @@
-package com.thenewsapp.presentation
+package com.thenewsapp.playground
 
 import kotlinx.coroutines.*
 import kotlin.system.measureTimeMillis

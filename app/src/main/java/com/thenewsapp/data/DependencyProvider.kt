@@ -1,6 +1,7 @@
 package com.thenewsapp.data
 
 import com.thenewsapp.data.net.ApiKeyInterceptor
+import com.thenewsapp.data.repository.NewsRepository
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -28,4 +29,6 @@ object DependencyProvider {
     fun <T> provideService(service: Class<T>): T {
         return retrofit.create(service)
     }
+
+    fun provideRepository(newsService: NewsService) = NewsRepository(newsService)
 }

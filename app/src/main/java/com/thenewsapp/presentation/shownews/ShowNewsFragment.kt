@@ -10,13 +10,12 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thenewsapp.R
 import com.thenewsapp.data.DependencyProvider
 import com.thenewsapp.data.NewsService
 import com.thenewsapp.data.model.News
-import com.thenewsapp.data.net.model.Resource
+import com.thenewsapp.data.net.model.Result
 import com.thenewsapp.databinding.ShowNewsFragmentBinding
 import com.thenewsapp.presentation.hide
 import com.thenewsapp.presentation.show
@@ -31,9 +30,11 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
 
     private val newsService = DependencyProvider.provideService(NewsService::class.java)
 
-    private val viewModelFactory = SharedNewsViewModel.Factory(this, null, newsService)
+    private val newsRepository = DependencyProvider.provideRepository(newsService)
 
-    private val viewModel: SharedNewsViewModel by activityViewModels { viewModelFactory }
+    private val viewModel: SharedNewsViewModel by activityViewModels {
+        SharedNewsViewModel.Factory(this, null, newsRepository)
+    }
 
     companion object {
         fun newInstance() = ShowNewsFragment()
@@ -54,7 +55,7 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = ShowNewsFragmentBinding.inflate(inflater, container, false)
         return binding.root
@@ -77,7 +78,7 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
         binding.svNews.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
-                    searchNews(it)
+                    searchNewsAndObserve(it)
                 } ?: run {
                     Toast.makeText(
                         activity, getString(R.string.enter_search_criteria), Toast.LENGTH_SHORT
@@ -95,35 +96,29 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
     private fun setupAdapter() = with(binding) {
         rvNews.layoutManager = LinearLayoutManager(activity)
 
-        // TODO Use Concat Adapter
-
         adapter = ShowNewsAdapter(arrayListOf(), this@ShowNewsFragment)
         rvNews.adapter = adapter
     }
 
-    private fun searchNews(query: String) {
-        viewModel.searchNews(query)
-
-        // Observe the LiveData
-        viewModel.news.observe(viewLifecycleOwner, Observer { resource ->
-            when (resource) {
-                is Resource.Loading -> {
+    private fun searchNewsAndObserve(query: String) {
+        viewModel.searchNews(query).observe(viewLifecycleOwner, { result ->
+            when (result) {
+                is Result.Loading -> {
                     binding.pbLoading.show()
                     binding.tvEmpty.hide()
                 }
-                is Resource.Success -> {
+                is Result.Success -> {
                     binding.pbLoading.hide()
-                    resource.data?.let { news ->
-                        if (news.isNotEmpty()) {
-                            showNews(news)
-                        } else {
-                            showNoResults()
-                        }
+                    val news = result.data
+                    if (news.isNotEmpty()) {
+                        showNews(news)
+                    } else {
+                        showNoResults()
                     }
                 }
-                is Resource.Error -> {
+                is Result.Error -> {
                     binding.pbLoading.hide()
-                    showError(resource.message)
+                    showError(result.exception?.message)
                 }
             }
         })
@@ -138,7 +133,7 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
             viewModel.getQuery()?.let { query ->
                 // Get saved query from ViewModel state
                 binding.svNews.setQuery(query, true)
-                searchNews(query)
+                searchNewsAndObserve(query)
             } ?: run {
                 // Show empty view
                 binding.tvEmpty.show()
