@@ -15,7 +15,7 @@ import com.thenewsapp.R
 import com.thenewsapp.data.DependencyProvider
 import com.thenewsapp.data.NewsService
 import com.thenewsapp.data.model.News
-import com.thenewsapp.data.net.model.Result
+import com.thenewsapp.data.model.Result
 import com.thenewsapp.databinding.ShowNewsFragmentBinding
 import com.thenewsapp.presentation.hide
 import com.thenewsapp.presentation.show
@@ -66,7 +66,17 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
 
         setupSearchView()
         setupAdapter()
-        getNews()
+
+        viewModel.getQuery()?.let { query ->
+            // Get saved query from ViewModel state
+            binding.svNews.setQuery(query, true)
+            searchNewsAndObserve(query)
+        } ?: run {
+            // Show empty view
+            binding.tvEmpty.show()
+            binding.tvEmpty.text = getString(R.string.search_favorite_topic)
+            searchNewsAndObserve("")
+        }
     }
 
     override fun onNewsSelected(news: News, sharedImageView: ImageView) {
@@ -118,28 +128,10 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
                 }
                 is Result.Error -> {
                     binding.pbLoading.hide()
-                    showError(result.exception?.message)
+                    showError(result.exception.message)
                 }
             }
         })
-    }
-
-    private fun getNews() {
-        viewModel.getNews()?.let { news ->
-            // Get news from LiveData
-            binding.tvEmpty.hide()
-            showNews(news)
-        } ?: run {
-            viewModel.getQuery()?.let { query ->
-                // Get saved query from ViewModel state
-                binding.svNews.setQuery(query, true)
-                searchNewsAndObserve(query)
-            } ?: run {
-                // Show empty view
-                binding.tvEmpty.show()
-                binding.tvEmpty.text = getString(R.string.search_favorite_topic)
-            }
-        }
     }
 
     private fun showNews(news: ArrayList<News>) = with(binding) {

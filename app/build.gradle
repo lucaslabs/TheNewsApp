@@ -84,5 +84,5 @@ dependencies {
     testImplementation deps.arch_core.testing
     testImplementation deps.hamcrest
     testImplementation deps.junit
-    testImplementation deps.mockito.core
+    testImplementation deps.mockito.inline
 }

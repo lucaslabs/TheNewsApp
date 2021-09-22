@@ -1,13 +1,13 @@
 package com.thenewsapp.presentation.shownews
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.thenewsapp.data.NewsService
 import com.thenewsapp.data.model.News
 import com.thenewsapp.data.model.NewsResponse
-import com.thenewsapp.data.net.model.Resource
+import com.thenewsapp.data.model.Result
+import com.thenewsapp.data.repository.NewsRepository
+import com.thenewsapp.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -15,8 +15,8 @@ import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
-import okhttp3.ResponseBody
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
@@ -24,12 +24,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.given
 import org.mockito.Mock
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import retrofit2.Response
 
 @RunWith(JUnit4::class)
 @ExperimentalCoroutinesApi
@@ -42,25 +40,21 @@ class SharedNewsViewModelTest {
     private val testCoroutineDispatcher = TestCoroutineDispatcher()
 
     @Mock
-    lateinit var observer: Observer<Resource<*>>
+    lateinit var newsService: NewsService
 
     @Mock
-    lateinit var newsService: NewsService
+    lateinit var newsRepository: NewsRepository
 
     private lateinit var viewModel: SharedNewsViewModel
 
     private val TEST_VALUE = "test"
     private val VALID_QUERY = "android"
     private val NOT_VALID_QUERY = "Lorem ipsum"
-    private val NOT_FOUND_ERROR_CODE = 404
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        viewModel = SharedNewsViewModel(null, newsService)
-
-        // Observe the LiveData forever
-        viewModel.news.observeForever(observer)
+        viewModel = SharedNewsViewModel(null, newsRepository)
 
         // Sets the given [dispatcher] as an underlying dispatcher of [Dispatchers.Main]
         Dispatchers.setMain(testCoroutineDispatcher)
@@ -68,9 +62,6 @@ class SharedNewsViewModelTest {
 
     @After
     fun tearDown() {
-        // Whatever happens, remove the observer!
-        viewModel.news.removeObserver(observer)
-
         // Resets state of the [Dispatchers.Main] to the original main dispatcher
         Dispatchers.resetMain()
 
@@ -118,64 +109,32 @@ class SharedNewsViewModelTest {
         // Given
         val expectedNews = arrayListOf<News>()
         val mockResponse = NewsResponse(expectedNews)
-        val mockSuccessResponse = Response.success(mockResponse)
-        given(newsService.searchNews(VALID_QUERY)).willReturn(mockSuccessResponse)
+        given(newsRepository.searchNews(VALID_QUERY)).willReturn(mockResponse)
 
         // When
-        viewModel.searchNews(VALID_QUERY)
-
-//        val actualNews = viewModel.news.value
+        val liveDataResponse = viewModel.searchNews(VALID_QUERY)
 
         // Then
-//        assertThat(actualNews?.data, equalTo(expectedNews))
-//
-//        verify(observer, times(1)).onChanged(isA(Resource.Loading::class.java))
-//        verify(observer, times(1)).onChanged(isA(Resource.Success::class.java))
-//        verify(observer, never()).onChanged(isA(Resource.Error::class.java))
-//
-//        verifyNoMoreInteractions(observer)
+        val loading = liveDataResponse.getOrAwaitValue()
+        assertThat(loading, instanceOf(Result.Loading::class.java))
 
-        viewModel.news.observeForTesting {
-            // Then
-            // TODO Get task from a Delegate component (Interactor, Use Case, Repository, etc)
-            val actualNews = viewModel.news.value?.data
-            assertThat(actualNews, equalTo(expectedNews))
-        }
+        val success = liveDataResponse.getOrAwaitValue()
+        assertThat(success, instanceOf(Result.Success::class.java))
     }
 
     @Test
     fun `search news with a not valid query should return error event`() = runBlockingTest {
         // Given
-        val expectedError = "Response.error()"
-        val mockResponseBody = mock(ResponseBody::class.java)
-        val mockErrorResponse =
-            Response.error<NewsResponse>(NOT_FOUND_ERROR_CODE, mockResponseBody)
-        given(newsService.searchNews(NOT_VALID_QUERY)).willReturn(mockErrorResponse)
+        `when`(newsRepository.searchNews(NOT_VALID_QUERY)).thenThrow(RuntimeException())
 
         // When
-        viewModel.searchNews(NOT_VALID_QUERY)
-        val actualError = viewModel.news.value
+        val liveDataResponse = viewModel.searchNews(NOT_VALID_QUERY)
 
         // Then
-        assertThat(actualError?.message, equalTo(expectedError))
+        val loading = liveDataResponse.getOrAwaitValue()
+        assertThat(loading, instanceOf(Result.Loading::class.java))
 
-        verify(observer, times(1)).onChanged(isA(Resource.Loading::class.java))
-        verify(observer, times(1)).onChanged(isA(Resource.Error::class.java))
-        verify(observer, never()).onChanged(isA(Resource.Success::class.java))
-
-        verifyNoMoreInteractions(observer)
-    }
-
-    /**
-     * Observes a [LiveData] until the `block` is done executing.
-     */
-    fun <T> LiveData<T>.observeForTesting(block: () -> Unit) {
-        val observer = Observer<T> { }
-        try {
-            observeForever(observer)
-            block()
-        } finally {
-            removeObserver(observer)
-        }
+        val error = liveDataResponse.getOrAwaitValue()
+        assertThat(error, instanceOf(Result.Error::class.java))
     }
 }

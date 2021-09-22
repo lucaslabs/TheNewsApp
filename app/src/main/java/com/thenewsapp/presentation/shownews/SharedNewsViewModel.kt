@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
 import com.thenewsapp.data.model.News
-import com.thenewsapp.data.net.model.Resource
-import com.thenewsapp.data.net.model.Result
+import com.thenewsapp.data.model.Result
 import com.thenewsapp.data.repository.NewsRepository
 
 class SharedNewsViewModel(
@@ -17,26 +16,23 @@ class SharedNewsViewModel(
         private const val QUERY_KEY = "query"
     }
 
-    private val _news = MutableLiveData<Resource<ArrayList<News>>>()
-    val news: LiveData<Resource<ArrayList<News>>> = _news
-
     private val _selectedNews = MutableLiveData<News>()
 
     fun searchNews(query: String) = liveData {
-        emit(Result.Loading())
+        if (query.isNotEmpty()) {
+            emit(Result.Loading)
 
-        saveQuery(query)
+            saveQuery(query)
 
-        runCatching {
-            newsRepository.searchNews(query)
-        }.onSuccess {
-            emit(Result.Success(it.news))
-        }.onFailure {
-            emit(Result.Error(it))
+            runCatching {
+                newsRepository.searchNews(query)
+            }.onSuccess {
+                emit(Result.Success(it.news))
+            }.onFailure {
+                emit(Result.Error(it))
+            }
         }
     }
-
-    fun getNews(): ArrayList<News>? = _news.value?.data
 
     fun setSelectedNews(news: News) {
         _selectedNews.value = news

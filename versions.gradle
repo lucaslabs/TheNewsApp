@@ -19,8 +19,6 @@ versions.junit = "4.13"
 versions.kotlin = "1.5.21"
 versions.lifecycle = "2.2.0"
 versions.mockito = "2.25.0"
-versions.mockito_all = "1.10.19"
-versions.mockito_android = "2.25.0"
 versions.okhttp_logging_interceptor = "3.9.0"
 versions.recyclerview = "1.2.0-alpha04" // Concat Adapter
 versions.retrofit = "2.9.0"
@@ -88,9 +86,7 @@ lifecycle.viewmodel_savedstate = "androidx.lifecycle:lifecycle-viewmodel-savedst
 deps.lifecycle = lifecycle
 
 def mockito = [:]
-mockito.core = "org.mockito:mockito-core:$versions.mockito"
-mockito.all = "org.mockito:mockito-all:$versions.mockito_all"
-mockito.android = "org.mockito:mockito-android:$versions.mockito_android"
+mockito.inline = "org.mockito:mockito-inline:$versions.mockito"
 deps.mockito = mockito
 
 deps.okhttp_logging_interceptor = "com.squareup.okhttp3:logging-interceptor:${versions.okhttp_logging_interceptor}"
