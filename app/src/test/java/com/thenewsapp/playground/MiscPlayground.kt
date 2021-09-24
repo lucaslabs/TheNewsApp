@@ -548,4 +548,76 @@ class MiscPlayground {
         }
         return k
     }
+
+    /**
+     * Implement strStr():
+     * Return the index of the first occurrence of needle in haystack,
+     * or -1 if needle is not part of haystack.
+     */
+    @Test
+    fun strStr() {
+        // Given
+        val haystack = "hello"
+        val needle = "ll"
+        val expectedOutput = 2
+
+        // When
+        val output = strStrBest(haystack, needle)
+
+        // Then
+        assertThat(output, equalTo(expectedOutput))
+    }
+
+    private fun strStr(haystack: String, needle: String): Int {
+        if (needle.isEmpty())
+            return 0
+
+        if (needle.length > haystack.length)
+            return -1
+
+        var occurrence = -1
+
+        for (i in 0 until haystack.length) {
+            for (j in 0 until needle.length) {
+                val index = i + j
+                if (index < haystack.length) {
+                    if (haystack[index] == needle[j]) {
+                        if (j == 0) {
+                            occurrence = i
+                        }
+                        if (j == needle.length - 1 && occurrence != -1) {
+                            return occurrence
+                        }
+                    } else {
+                        occurrence = -1
+                    }
+                } else {
+                    occurrence = -1
+                }
+            }
+        }
+
+        return occurrence
+    }
+
+    private fun strStrBest(haystack: String, needle: String): Int {
+        if (needle.isEmpty()) return 0
+
+        for (i in 0 until haystack.length - needle.length + 1) {
+            var isMatching = false
+            for (j in 0 until needle.length) {
+                if (haystack[j + i] == needle[j]) {
+                    isMatching = true
+                } else {
+                    isMatching = false
+                    break
+                }
+            }
+            if (isMatching) {
+                return i
+            }
+        }
+
+        return -1
+    }
 }
