@@ -3,13 +3,17 @@ package com.thenewsapp.presentation.shownews
 import android.os.Bundle
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
+import com.thenewsapp.data.db.Search
 import com.thenewsapp.data.model.News
 import com.thenewsapp.data.model.Result
 import com.thenewsapp.data.repository.NewsRepository
+import com.thenewsapp.data.repository.SearchTermRepository
+import kotlinx.coroutines.launch
 
 class SharedNewsViewModel(
     private val savedStateHandle: SavedStateHandle?,
     private val newsRepository: NewsRepository,
+    private val searchTermRepository: SearchTermRepository,
 ) : ViewModel() {
 
     companion object {
@@ -17,6 +21,16 @@ class SharedNewsViewModel(
     }
 
     private val _selectedNews = MutableLiveData<News>()
+
+    val allSearchTerms: LiveData<List<Search>> =
+        searchTermRepository.allSearchTerms.asLiveData()
+
+    /**
+     * Launching a new coroutine to insert the data in a non-blocking way
+     */
+    fun insert(searchTerm: Search) = viewModelScope.launch {
+        searchTermRepository.insert(searchTerm)
+    }
 
     fun searchNews(query: String) = liveData {
         if (query.isNotEmpty()) {
@@ -48,6 +62,7 @@ class SharedNewsViewModel(
         owner: SavedStateRegistryOwner,
         defaultState: Bundle?,
         private val newsRepository: NewsRepository,
+        private val searchTermRepository: SearchTermRepository,
     ) : AbstractSavedStateViewModelFactory(owner, defaultState) {
 
         @Suppress("UNCHECKED_CAST")
@@ -56,7 +71,11 @@ class SharedNewsViewModel(
             modelClass: Class<T>,
             handle: SavedStateHandle,
         ): T {
-            return SharedNewsViewModel(handle, newsRepository) as T
+            if (modelClass.isAssignableFrom(SharedNewsViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return SharedNewsViewModel(handle, newsRepository, searchTermRepository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }

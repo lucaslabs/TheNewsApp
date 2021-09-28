@@ -23,6 +23,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
+    }
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
         useIR = true
@@ -54,6 +58,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     kapt deps.glide.compiler
+    kapt deps.room.compiler
 
     implementation deps.app_compat
     implementation deps.compose.activity
@@ -82,6 +87,7 @@ dependencies {
     implementation deps.retrofit.runtime
     implementation deps.retrofit.gson
     implementation deps.retrofit.mock
+    implementation deps.room.ktx
 
     // Testing
     testImplementation deps.arch_core.testing

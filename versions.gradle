@@ -23,6 +23,7 @@ versions.mockito = "2.25.0"
 versions.okhttp_logging_interceptor = "3.9.0"
 versions.recyclerview = "1.2.0-alpha04" // Concat Adapter
 versions.retrofit = "2.9.0"
+versions.room = "2.3.0"
 ext.versions = versions
 
 def build_versions = [:]
@@ -105,5 +106,10 @@ retrofit.runtime = "com.squareup.retrofit2:retrofit:$versions.retrofit"
 retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"
 retrofit.mock = "com.squareup.retrofit2:retrofit-mock:$versions.retrofit"
 deps.retrofit = retrofit
+
+def room = [:]
+room.ktx = "androidx.room:room-ktx:$versions.room"
+room.compiler = "androidx.room:room-compiler:$versions.room"
+deps.room = room
 
 ext.deps = deps

@@ -2,6 +2,7 @@ package com.thenewsapp.presentation.shownews
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.thenewsapp.R
 import com.thenewsapp.data.DependencyProvider
 import com.thenewsapp.data.NewsService
+import com.thenewsapp.data.db.Search
 import com.thenewsapp.data.model.News
 import com.thenewsapp.data.model.Result
 import com.thenewsapp.databinding.ShowNewsFragmentBinding
+import com.thenewsapp.presentation.NewsApplication
 import com.thenewsapp.presentation.hide
 import com.thenewsapp.presentation.show
 
@@ -33,7 +36,8 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
     private val newsRepository = DependencyProvider.provideRepository(newsService)
 
     private val viewModel: SharedNewsViewModel by activityViewModels {
-        SharedNewsViewModel.Factory(this, null, newsRepository)
+        SharedNewsViewModel.Factory(this, null, newsRepository,
+            (requireActivity().application as NewsApplication).searchTermRepository)
     }
 
     interface ActionListener {
@@ -73,6 +77,8 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
             binding.tvEmpty.text = getString(R.string.search_favorite_topic)
             searchNewsAndObserve("")
         }
+
+        observeSearchTerms()
     }
 
     override fun onNewsSelected(news: News, sharedImageView: ImageView) {
@@ -90,7 +96,7 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
                         activity, getString(R.string.enter_search_criteria), Toast.LENGTH_SHORT
                     ).show()
                 }
-                return false
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -118,6 +124,9 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
                     val news = result.data
                     if (news.isNotEmpty()) {
                         showNews(news)
+
+                        // Insert search query only if there are news
+                        viewModel.insert(Search(query = query))
                     } else {
                         showNoResults()
                     }
@@ -143,5 +152,11 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
         adapter.clearAll()
         binding.tvEmpty.show()
         binding.tvEmpty.text = getString(R.string.no_results_found)
+    }
+
+    private fun observeSearchTerms() {
+        viewModel.allSearchTerms.observe(viewLifecycleOwner, { searchTerms ->
+            Log.d("Search terms: ", "$searchTerms")
+        })
     }
 }
