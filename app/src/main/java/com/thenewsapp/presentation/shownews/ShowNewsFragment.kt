@@ -36,10 +36,6 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
         SharedNewsViewModel.Factory(this, null, newsRepository)
     }
 
-    companion object {
-        fun newInstance() = ShowNewsFragment()
-    }
-
     interface ActionListener {
         fun showNewsDetailView(news: News, sharedImageView: ImageView)
     }

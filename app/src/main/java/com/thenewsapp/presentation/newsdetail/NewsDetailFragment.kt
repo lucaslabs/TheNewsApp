@@ -21,18 +21,14 @@ import com.thenewsapp.presentation.shownews.SharedNewsViewModel
 
 class NewsDetailFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = NewsDetailFragment()
-    }
-
     private val viewModel: SharedNewsViewModel by activityViewModels()
 
     private lateinit var binding: NewsDetailFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?,
+    ): View {
         binding = NewsDetailFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }

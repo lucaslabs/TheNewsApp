@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
     compileSdkVersion build_versions.compile_sdk
@@ -75,6 +76,8 @@ dependencies {
     implementation deps.lifecycle.livedata_ktx
     implementation deps.lifecycle.viewmodel_ktx
     implementation deps.lifecycle.viewmodel_savedstate
+    implementation deps.navigation.fragment_ktx
+    implementation deps.navigation.ui_ktx
     implementation deps.recycler_view
     implementation deps.retrofit.runtime
     implementation deps.retrofit.gson
