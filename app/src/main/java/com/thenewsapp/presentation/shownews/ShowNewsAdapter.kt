@@ -3,6 +3,8 @@ package com.thenewsapp.presentation.shownews
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thenewsapp.data.model.News
 import com.thenewsapp.databinding.ShowNewsItemBinding
@@ -10,8 +12,8 @@ import com.thenewsapp.presentation.loadUrl
 
 class ShowNewsAdapter(
     private var news: ArrayList<News>,
-    private val listener: NewsSelectedListener
-) : RecyclerView.Adapter<ShowNewsAdapter.ShowNewsViewHolder>() {
+    private val listener: NewsSelectedListener,
+) : ListAdapter<News, ShowNewsAdapter.ShowNewsViewHolder>(DiffCallback()) {
 
     private lateinit var binding: ShowNewsItemBinding
 
@@ -33,12 +35,11 @@ class ShowNewsAdapter(
 
     fun addAll(newsList: List<News>) {
         news.addAll(newsList)
-        notifyDataSetChanged()
+        submitList(news)
     }
 
     fun clearAll() {
         news.clear()
-        notifyDataSetChanged()
     }
 
     inner class ShowNewsViewHolder(private val binding: ShowNewsItemBinding) :
@@ -52,5 +53,13 @@ class ShowNewsAdapter(
                 listener.onNewsSelected(news, ivNews)
             }
         }
+    }
+
+    private class DiffCallback : DiffUtil.ItemCallback<News>() {
+
+        override fun areItemsTheSame(oldItem: News, newItem: News) = oldItem == newItem
+
+        override fun areContentsTheSame(oldItem: News, newItem: News) =
+            oldItem.title == newItem.title
     }
 }
