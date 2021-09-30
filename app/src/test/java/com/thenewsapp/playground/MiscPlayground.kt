@@ -31,7 +31,7 @@ class MiscPlayground {
         assertThat(output, equalTo(intArrayOf(0, 1)))
     }
 
-    // Brute force: O(n^2) runtime and O(1) space complexities
+    // Brute force: O(n^2) time and O(1) space complexities
     private fun twoSum(nums: IntArray, target: Int): IntArray {
         // Edge cases:
         // What if nums is null, or has only 1 num in it?
@@ -46,7 +46,7 @@ class MiscPlayground {
         return intArrayOf()
     }
 
-    // Using a hashmap: O(n) runtime and O(n) space complexities
+    // Using a hashmap: O(n) time and O(n) space complexities
     private fun twoSumBest(nums: IntArray, target: Int): IntArray {
         val diffMap = mutableMapOf<Int, Int>()
         nums.forEachIndexed { index, num ->
@@ -619,5 +619,41 @@ class MiscPlayground {
         }
 
         return -1
+    }
+
+    /**
+     * Valid Anagram:
+     * Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+     */
+    @Test
+    fun isAnagram() {
+        // Given
+        val s = "anagram"
+        val t = "gramana"
+
+        // When
+        val output = isAnagram(s, t)
+
+        // Then
+        assertThat(output, equalTo(true))
+    }
+
+    // O(n) time and O(26) space complexities
+    fun isAnagram(s: String, t: String): Boolean {
+        if (s.length != t.length) return false
+
+        val map = IntArray(26)
+
+        for (i in 0 until s.length) {
+            map[s[i] - 'a']++
+            map[t[i] - 'a']--
+        }
+
+        for (m in map) {
+            if (m != 0)
+                return false
+        }
+
+        return true
     }
 }
