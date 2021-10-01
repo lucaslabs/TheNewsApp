@@ -16,6 +16,11 @@
     <fragment
         android:id="@+id/newsDetailFragment"
         android:name="com.thenewsapp.presentation.newsdetail.NewsDetailFragment"
-        android:label="NewsDetailFragment" />
+        android:label="NewsDetailFragment">
+        <argument
+            android:name="title"
+            android:defaultValue=""
+            app:argType="string" />
+    </fragment>
 
 </navigation>

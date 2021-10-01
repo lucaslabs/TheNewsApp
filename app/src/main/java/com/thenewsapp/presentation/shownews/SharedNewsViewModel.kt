@@ -22,8 +22,8 @@ class SharedNewsViewModel(
 
     private val _selectedNews = MutableLiveData<News>()
 
-    val allSearchTerms: LiveData<List<Search>> =
-        searchTermRepository.allSearchTerms.asLiveData()
+    val allSearchTerms: LiveData<List<Search>>? =
+        searchTermRepository.allSearchTerms?.asLiveData()
 
     /**
      * Launching a new coroutine to insert the data in a non-blocking way

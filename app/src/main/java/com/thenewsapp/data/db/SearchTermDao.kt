@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface SearchTermDao {
 
     @Query("SELECT * FROM search_table ORDER BY `query` ASC")
-    fun getAllSearchTerms(): Flow<List<Search>>
+    fun getAllSearchTerms(): Flow<List<Search>>?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(searchTerm: Search)

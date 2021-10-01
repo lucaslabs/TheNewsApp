@@ -2,12 +2,10 @@ package com.thenewsapp.playground
 
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import kotlin.math.abs
 
-@RunWith(JUnit4::class)
 class MiscPlayground {
 
     /**
@@ -683,5 +681,73 @@ class MiscPlayground {
 
         // Then
         assertThat(output, equalTo(expectedOutput))
+    }
+
+    /**
+     * Caesar Cipher:
+     * Given a string and integer shift implement a function which shifts each character
+     * in that string by shift amount ( cesar cipher) eg. if shift is 1 then a becomes b, c becomes d, z became a etc.
+     * Allowed input is string containing only lowercase characters from alphabet abcdefghijklmnopqrstuvwxyz.
+     *
+     * encodeCaesarCipher("abc", 1) // bcd
+     *
+     * encodeCaesarCipher("abc", 3) // def
+     *
+     * encodeCaesarCipher("xyz", 1) // xya
+     */
+    @Test
+    fun `"abc" with shift 1 return "bcd"`() {
+        // Given
+        val input = "abc"
+        val shift = 1
+        val expectedOutput = "bcd"
+
+        // When
+        val output = encodeCaesarCipher(input, shift)
+
+        // Then
+        Assert.assertEquals(output, expectedOutput)
+    }
+
+    @Test
+    fun `"abcdefghijklmnopqrstuvwxyz" shift 1 returns "bcdefghijklmnopqrstuvwxyza"`() {
+        // Given
+        val input = "abcdefghijklmnopqrstuvwxyz"
+        val shift = 1
+        val expectedOutput = "bcdefghijklmnopqrstuvwxyza"
+
+        // When
+        val output = encodeCaesarCipher(input, shift)
+
+        // Then
+        Assert.assertEquals(output, expectedOutput)
+    }
+
+    @Test
+    fun `"abcdefghijklmnopqrstuvwxyz" shift 50 returns "yzabcdefghijklmnopqrstuvwx"`() {
+        // Given
+        val input = "abcdefghijklmnopqrstuvwxyz"
+        val shift = 50
+        val expectedOutput = "yzabcdefghijklmnopqrstuvwx"
+
+        // When
+        val output = encodeCaesarCipher(input, shift)
+
+        // Then
+        Assert.assertEquals(output, expectedOutput)
+    }
+
+    private fun encodeCaesarCipher(str: String, shift: Int): String {
+        val max = 122
+        val size = 26
+
+        val diff = shift % size
+        if (diff == 0) return str
+
+        return str.map { c ->
+            var n = (c.code + diff).toChar()
+            if (n.code > max) n -= size
+            n
+        }.joinToString("")
     }
 }

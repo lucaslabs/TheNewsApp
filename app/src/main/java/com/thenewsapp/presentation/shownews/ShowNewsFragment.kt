@@ -1,16 +1,15 @@
 package com.thenewsapp.presentation.shownews
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thenewsapp.R
 import com.thenewsapp.data.DependencyProvider
@@ -23,11 +22,9 @@ import com.thenewsapp.presentation.NewsApplication
 import com.thenewsapp.presentation.hide
 import com.thenewsapp.presentation.show
 
-class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
+class ShowNewsFragment : Fragment() {
 
     private lateinit var binding: ShowNewsFragmentBinding
-
-    private lateinit var actionListener: ActionListener
 
     private lateinit var adapter: ShowNewsAdapter
 
@@ -38,19 +35,6 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
     private val viewModel: SharedNewsViewModel by activityViewModels {
         SharedNewsViewModel.Factory(this, null, newsRepository,
             (requireActivity().application as NewsApplication).searchTermRepository)
-    }
-
-    interface ActionListener {
-        fun showNewsDetailView(news: News, sharedImageView: ImageView)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            actionListener = context as ActionListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement ActionListener!")
-        }
     }
 
     override fun onCreateView(
@@ -70,7 +54,6 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
         viewModel.getQuery()?.let { query ->
             // Get saved query from ViewModel state
             binding.svNews.setQuery(query, true)
-            searchNewsAndObserve(query)
         } ?: run {
             // Show empty view
             binding.tvEmpty.show()
@@ -79,11 +62,6 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
         }
 
         observeSearchTerms()
-    }
-
-    override fun onNewsSelected(news: News, sharedImageView: ImageView) {
-        viewModel.setSelectedNews(news)
-        actionListener.showNewsDetailView(news, sharedImageView)
     }
 
     private fun setupSearchView() {
@@ -108,7 +86,7 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
     private fun setupAdapter() = with(binding) {
         rvNews.layoutManager = LinearLayoutManager(activity)
 
-        adapter = ShowNewsAdapter(arrayListOf(), this@ShowNewsFragment)
+        adapter = ShowNewsAdapter(arrayListOf(), ::onNewsSelected)
         rvNews.adapter = adapter
     }
 
@@ -155,8 +133,15 @@ class ShowNewsFragment : Fragment(), ShowNewsAdapter.NewsSelectedListener {
     }
 
     private fun observeSearchTerms() {
-        viewModel.allSearchTerms.observe(viewLifecycleOwner, { searchTerms ->
+        viewModel.allSearchTerms?.observe(viewLifecycleOwner, { searchTerms ->
             Log.d("Search terms: ", "$searchTerms")
         })
+    }
+
+    private fun onNewsSelected(news: News) {
+        viewModel.setSelectedNews(news)
+        val action =
+            ShowNewsFragmentDirections.actionShowNewsFragmentToNewsDetailFragment(news.title)
+        findNavController().navigate(action)
     }
 }

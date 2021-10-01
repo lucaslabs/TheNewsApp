@@ -14,6 +14,8 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.toSpannable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.navArgs
+import com.thenewsapp.R
 import com.thenewsapp.data.model.News
 import com.thenewsapp.databinding.NewsDetailFragmentBinding
 import com.thenewsapp.presentation.loadUrl
@@ -24,6 +26,7 @@ class NewsDetailFragment : Fragment() {
     private val viewModel: SharedNewsViewModel by activityViewModels()
 
     private lateinit var binding: NewsDetailFragmentBinding
+    private val safeArgs: NewsDetailFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,8 +46,8 @@ class NewsDetailFragment : Fragment() {
         viewModel.getSelectedNews()?.let { news ->
             with(binding) {
                 ivNews.loadUrl(news.urlToImage)
-                tvTitle.text = news.title
-                tvAuthor.text = "${news.author} @ "
+                tvTitle.text = safeArgs.title
+                tvAuthor.text = getString(R.string.author, news.author)
                 tvSource.text = news.source.name
                 tvDescription.text = news.description
 
@@ -57,8 +60,9 @@ class NewsDetailFragment : Fragment() {
     private fun getNewsUrl(news: News): Spannable {
         val span = buildSpannedString {
             bold {
-                append("Read more at ")
+                append(getString(R.string.read_more_at))
             }
+            append(" ")
             append(news.url)
         }.toSpannable()
 

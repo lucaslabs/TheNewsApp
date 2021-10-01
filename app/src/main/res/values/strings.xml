@@ -3,4 +3,6 @@
     <string name="search_favorite_topic">Start searching your favorite topic :)</string>
     <string name="enter_search_criteria">Please enter a search criteria.</string>
     <string name="no_results_found">No results found for your search criteria. Try with a new one :)</string>
+    <string name="author">%s @ </string>
+    <string name="read_more_at">Read more at</string>
 </resources>

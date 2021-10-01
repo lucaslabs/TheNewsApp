@@ -2,11 +2,11 @@ package com.thenewsapp.presentation.shownews
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.thenewsapp.data.NewsService
 import com.thenewsapp.data.model.News
 import com.thenewsapp.data.model.NewsResponse
 import com.thenewsapp.data.model.Result
 import com.thenewsapp.data.repository.NewsRepository
+import com.thenewsapp.data.repository.SearchTermRepository
 import com.thenewsapp.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,14 +22,11 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import org.mockito.BDDMockito.given
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
-@RunWith(JUnit4::class)
 @ExperimentalCoroutinesApi
 class SharedNewsViewModelTest {
 
@@ -40,10 +37,10 @@ class SharedNewsViewModelTest {
     private val testCoroutineDispatcher = TestCoroutineDispatcher()
 
     @Mock
-    lateinit var newsService: NewsService
+    lateinit var newsRepository: NewsRepository
 
     @Mock
-    lateinit var newsRepository: NewsRepository
+    lateinit var searchTermRepository: SearchTermRepository
 
     private lateinit var viewModel: SharedNewsViewModel
 
@@ -54,7 +51,7 @@ class SharedNewsViewModelTest {
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        viewModel = SharedNewsViewModel(null, newsRepository)
+        viewModel = SharedNewsViewModel(null, newsRepository, searchTermRepository)
 
         // Sets the given [dispatcher] as an underlying dispatcher of [Dispatchers.Main]
         Dispatchers.setMain(testCoroutineDispatcher)
@@ -100,7 +97,7 @@ class SharedNewsViewModelTest {
     }
 
     /**
-     * Test naming convention
+     * Test naming convention:
      * 1. subjectUnderTest_actionOrInput_resultState
      * 2. `subject under test with action or input should return result state`
      */
