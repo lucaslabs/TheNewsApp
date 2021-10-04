@@ -1,4 +1,4 @@
-package com.thenewsapp.presentation.compose
+package com.thenewsapp.presentation.compose.utils
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.thenewsapp.presentation.compose
+package com.thenewsapp.presentation.compose.utils
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thenewsapp.presentation.compose.model.Counter
 import com.thenewsapp.presentation.compose.model.GreetingItem
+import com.thenewsapp.presentation.compose.utils.BasicsTheme
 
 @Composable
 fun GreetingScreen(

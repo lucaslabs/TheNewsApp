@@ -5,6 +5,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
+import com.thenewsapp.presentation.compose.utils.BasicsTheme
 
 class GreetingActivity : AppCompatActivity() {
 
