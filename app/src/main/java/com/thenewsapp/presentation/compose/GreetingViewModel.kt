@@ -1,17 +1,19 @@
 package com.thenewsapp.presentation.compose
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 
 class GreetingViewModel : ViewModel() {
 
     // Mutable states for Compose instead of LiveData.
-    var greetingItems = mutableStateListOf<GreetingItem>()
-        private set
+    private val _greetingItems = mutableStateListOf<GreetingItem>()
+    val greetingItems: SnapshotStateList<GreetingItem> = _greetingItems
 
-    var counter = mutableStateOf(Counter(0))
-        private set
+    private val _counter = mutableStateOf(Counter(0))
+    val counter: State<Counter> = _counter
 
     init {
         List(100) { id ->
@@ -21,10 +23,10 @@ class GreetingViewModel : ViewModel() {
 
     fun onItemClick(position: Int, greetingItem: GreetingItem) {
         greetingItem.isSelected = !greetingItem.isSelected
-        greetingItems[position] = greetingItem
+        _greetingItems[position] = greetingItem
     }
 
     fun onCounterClick(count: Int) {
-        counter.value = Counter(count)
+        _counter.value = Counter(count)
     }
 }
