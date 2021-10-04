@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
 
 class ComposeActivity : AppCompatActivity() {
 
@@ -15,7 +16,7 @@ class ComposeActivity : AppCompatActivity() {
         setContent {
             // States
             val greetingItems = viewModel.greetingItems
-            val counter = viewModel.counter
+            val counter by viewModel.counter
 
             // Theme
             BasicsTheme {
@@ -26,7 +27,7 @@ class ComposeActivity : AppCompatActivity() {
                     onItemClick = { position, greetingItem ->
                         viewModel.onItemClick(position, greetingItem)
                     },
-                    counter = counter.value,
+                    counter = counter,
                     onCounterClick = { count ->
                         viewModel.onCounterClick(count)
                     },
