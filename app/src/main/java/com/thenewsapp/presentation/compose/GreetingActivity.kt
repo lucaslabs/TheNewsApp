@@ -6,7 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 
-class ComposeActivity : AppCompatActivity() {
+class GreetingActivity : AppCompatActivity() {
 
     private val viewModel: GreetingViewModel by viewModels()
 
