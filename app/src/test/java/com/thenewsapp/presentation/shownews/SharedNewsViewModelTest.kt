@@ -19,6 +19,7 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -42,10 +43,11 @@ class SharedNewsViewModelTest {
     @Mock
     lateinit var searchTermRepository: SearchTermRepository
 
-    private lateinit var viewModel: SharedNewsViewModel
+    private lateinit var viewModel: SharedNewsViewModel // SUT
 
     private val TEST_VALUE = "test"
     private val VALID_QUERY = "android"
+    private val EMPTY_QUERY = ""
     private val NOT_VALID_QUERY = "Lorem ipsum"
 
     @Before
@@ -117,6 +119,7 @@ class SharedNewsViewModelTest {
 
         val success = liveDataResponse.getOrAwaitValue()
         assertThat(success, instanceOf(Result.Success::class.java))
+        assertThat((success as Result.Success).data, equalTo(expectedNews))
     }
 
     @Test
@@ -133,5 +136,17 @@ class SharedNewsViewModelTest {
 
         val error = liveDataResponse.getOrAwaitValue()
         assertThat(error, instanceOf(Result.Error::class.java))
+    }
+
+    @Test
+    fun `search news with an empty query should return null event`() = runBlockingTest {
+        // Given
+        given(newsRepository.searchNews(EMPTY_QUERY)).willReturn(null)
+
+        // When
+        val liveDataResponse = viewModel.searchNews(EMPTY_QUERY)
+
+        // Then
+        assertNull(liveDataResponse.value)
     }
 }
