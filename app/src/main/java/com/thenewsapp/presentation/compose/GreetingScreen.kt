@@ -15,25 +15,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.thenewsapp.presentation.compose.model.Counter
-import com.thenewsapp.presentation.compose.model.GreetingItem
+import com.thenewsapp.presentation.compose.model.CounterState
+import com.thenewsapp.presentation.compose.model.GreetingItemState
 import com.thenewsapp.presentation.compose.utils.BasicsTheme
 
 @Composable
 fun GreetingScreen(
-    greetingItems: List<GreetingItem>,
-    onItemClick: (Int, GreetingItem) -> Unit,
-    counter: Counter,
+    greetingItemStates: List<GreetingItemState>,
+    onItemClick: (Int, GreetingItemState) -> Unit,
+    counterState: CounterState,
     onCounterClick: (Int) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxHeight()) {
         GreetingList(
-            greetingItems = greetingItems,
+            greetingItemStates = greetingItemStates,
             onItemClick = onItemClick,
             modifier = Modifier.Companion.weight(1f),
         )
         Counter(
-            counter = counter,
+            counterState = counterState,
             onCounterClick = onCounterClick
         )
     }
@@ -41,15 +41,15 @@ fun GreetingScreen(
 
 @Composable
 fun GreetingList(
-    greetingItems: List<GreetingItem>,
-    onItemClick: (Int, GreetingItem) -> Unit,
+    greetingItemStates: List<GreetingItemState>,
+    onItemClick: (Int, GreetingItemState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
-        itemsIndexed(items = greetingItems) { position, item ->
+        itemsIndexed(items = greetingItemStates) { position, item ->
             GreetingItem(
                 position = position,
-                item = item,
+                greetingItemState = item,
                 onItemClick = onItemClick
             )
             Divider(color = Color.Black)
@@ -61,38 +61,38 @@ fun GreetingList(
 @Composable
 fun GreetingItem(
     position: Int,
-    item: GreetingItem,
-    onItemClick: (Int, GreetingItem) -> Unit,
+    greetingItemState: GreetingItemState,
+    onItemClick: (Int, GreetingItemState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val backgroundColor by animateColorAsState(
-        if (item.isSelected) MaterialTheme.colors.primary
+        if (greetingItemState.isSelected) MaterialTheme.colors.primary
         else Color.Transparent
     )
     Text(
-        text = item.name,
+        text = greetingItemState.name,
         modifier = Modifier
             .padding(12.dp)
             .background(backgroundColor)
-            .clickable { onItemClick(position, item) }
+            .clickable { onItemClick(position, greetingItemState) }
     )
 }
 
 @Composable
 fun Counter(
-    counter: Counter,
+    counterState: CounterState,
     onCounterClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val color by animateColorAsState(
-        if (counter.count % 2 == 0) MaterialTheme.colors.primary
+        if (counterState.count % 2 == 0) MaterialTheme.colors.primary
         else MaterialTheme.colors.secondary
     )
     Button(
         colors = ButtonDefaults.buttonColors(color),
-        onClick = { onCounterClick(counter.count + 1) }
+        onClick = { onCounterClick(counterState.count + 1) }
     ) {
-        Text(text = "Clicked ${counter.count} times")
+        Text(text = "Clicked ${counterState.count} times")
     }
 }
 // endregion
@@ -102,13 +102,13 @@ fun Counter(
 fun Preview() {
     BasicsTheme(darkTheme = false) {
         GreetingScreen(
-            greetingItems = listOf(
-                GreetingItem(1, "Hello #1"),
-                GreetingItem(2, "Hello #2"),
-                GreetingItem(3, "Hello #3")
+            greetingItemStates = listOf(
+                GreetingItemState(1, "Hello #1"),
+                GreetingItemState(2, "Hello #2"),
+                GreetingItemState(3, "Hello #3")
             ),
             onItemClick = { _, _ -> },
-            counter = Counter(0),
+            counterState = CounterState(0),
             onCounterClick = {}
         )
     }

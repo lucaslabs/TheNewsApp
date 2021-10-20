@@ -16,19 +16,19 @@ class GreetingActivity : AppCompatActivity() {
 
         setContent {
             // States
-            val greetingItems = viewModel.greetingItems
-            val counter by viewModel.counter
+            val greetingItemStates = viewModel.greetingItemStates
+            val counterState by viewModel.counterState
 
             // Theme
             BasicsTheme {
 
                 // Screen
                 GreetingScreen(
-                    greetingItems = greetingItems,
+                    greetingItemStates = greetingItemStates,
                     onItemClick = { position, greetingItem ->
                         viewModel.onItemClick(position, greetingItem)
                     },
-                    counter = counter,
+                    counterState = counterState,
                     onCounterClick = { count ->
                         viewModel.onCounterClick(count)
                     },

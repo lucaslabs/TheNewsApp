@@ -5,30 +5,30 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import com.thenewsapp.presentation.compose.model.Counter
-import com.thenewsapp.presentation.compose.model.GreetingItem
+import com.thenewsapp.presentation.compose.model.CounterState
+import com.thenewsapp.presentation.compose.model.GreetingItemState
 
 class GreetingViewModel : ViewModel() {
 
     // Mutable states for Compose instead of LiveData.
-    private val _greetingItems = mutableStateListOf<GreetingItem>()
-    val greetingItems: SnapshotStateList<GreetingItem> = _greetingItems
+    private val _greetingItemStates = mutableStateListOf<GreetingItemState>()
+    val greetingItemStates: SnapshotStateList<GreetingItemState> = _greetingItemStates
 
-    private val _counter = mutableStateOf(Counter(0))
-    val counter: State<Counter> = _counter
+    private val _counterState = mutableStateOf(CounterState(0))
+    val counterState: State<CounterState> = _counterState
 
     init {
         List(100) { id ->
-            greetingItems.add(GreetingItem(id, "Hello #$id", isSelected = false))
+            _greetingItemStates.add(GreetingItemState(id, "Hello #$id", isSelected = false))
         }
     }
 
-    fun onItemClick(position: Int, greetingItem: GreetingItem) {
-        greetingItem.isSelected = !greetingItem.isSelected
-        _greetingItems[position] = greetingItem
+    fun onItemClick(position: Int, greetingItemState: GreetingItemState) {
+        greetingItemState.isSelected = !greetingItemState.isSelected
+        _greetingItemStates[position] = greetingItemState
     }
 
     fun onCounterClick(count: Int) {
-        _counter.value = Counter(count)
+        _counterState.value = CounterState(count)
     }
 }
