@@ -3,21 +3,21 @@ Code Challenge Tips
 
 1. Leer y releer la consigna
 2. Hacer preguntas (edge cases, que pasa si...?)
-3. Hablar en voz alta [IMPORTANTE]
+3. Hablar/contar en voz alta lo que pensamos [IMPORTANTE]
 
 4.Tener en cuenta Time Complexity:
-* Constant time O(1): sumar 2 números, identificar si un número es par o impar,
-obtener el primer elemento de una lista,
-acceder a un mapa/hashtable con una key para obtener el value.
-* Logarithmic time O(log n): buscar un elemento en un lista con binary search.
-* Linear time O(n): encontrar el máximo/mínimo valor en una lista, usar 1 ciclo for.
-* Quadratic time O(n^2): ordenar una lista con bubble sort, usar 2 ciclos for.
-* Cubic time O(n^3): usar 3 ciclos for.
+    * Constant time O(1): sumar 2 números, identificar si un número es par o impar,
+        obtener el primer elemento de una lista,
+        acceder a un mapa/hashtable con una key para obtener un valor.
+    * Logarithmic time O(log n): buscar un elemento en un lista con binary search.
+    * Linear time O(n): encontrar el máximo/mínimo valor en una lista, usar 1 ciclo for.
+    * Quadratic time O(n^2): ordenar una lista con bubble sort, usar 2 ciclos for.
+    * Cubic time O(n^3): usar 3 ciclos for.
 
 5. Tener en cuenta Space Complexity:
-* Constant time O(1): sumar 2 números.
-* Linear time O(n): sumar n números usar (1 ciclo for).
+    * Constant time O(1): sumar 2 números.
+    * Linear time O(n): sumar n números, usar 1 ciclo for.
 
 6. Implementar una solución de fuerza bruta
-7. Implementar una solución avanzada
+7. Implementar una solución mejorada
 8. Agregar unit tests (PLUS)
