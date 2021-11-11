@@ -1,11 +1,18 @@
 Code Challenge Tips
 ===================
 
+Antes del coding
+----------------
+
 1. Leer y releer la consigna
 2. Hacer preguntas (edge cases, que pasa si...?)
+
+Durante el coding
+-----------------
+
 3. Hablar/contar en voz alta lo que pensamos [IMPORTANTE]
 
-4.Tener en cuenta Time Complexity:
+4. Tener en cuenta Time Complexity:
     * Constant time O(1): sumar 2 números, identificar si un número es par o impar,
         obtener el primer elemento de una lista,
         acceder a un mapa/hashtable con una key para obtener un valor.
@@ -21,3 +28,9 @@ Code Challenge Tips
 6. Implementar una solución de fuerza bruta
 7. Implementar una solución mejorada
 8. Agregar unit tests (PLUS)
+
+Después del coding
+------------------
+
+9. Hablar sobre las soluciones propuestas
+10. Pedir feedback

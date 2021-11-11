@@ -31,12 +31,10 @@ class MiscPlayground {
 
     // Brute force: O(n^2) time and O(1) space complexities
     private fun twoSum(nums: IntArray, target: Int): IntArray {
-        // Edge cases:
-        // What if nums is null, or has only 1 num in it?
-
-        for (i in 0 until nums.size - 1) {
-            for (j in i + 1 until nums.size - 1) {
-                if (nums[i] + nums[j] == target) {
+        // Edge cases: What if nums is null, or has only 1 num in it?
+        for(i in nums.indices) {
+            for (j in nums.indices) {
+                if(i != j && nums[i] + nums[j] == target) {
                     return intArrayOf(i, j)
                 }
             }
