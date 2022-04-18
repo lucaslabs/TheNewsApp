@@ -234,12 +234,16 @@ class MiscPlayground {
 
             val value = getValue(letter)
 
-            if (value >= m1Value) {
-                result += value
-            } else if (m1Value >= m2Value) {
-                result -= value
-            } else {
-                throw Exception("Wrong number")
+            when {
+                value >= m1Value -> {
+                    result += value
+                }
+                m1Value >= m2Value -> {
+                    result -= value
+                }
+                else -> {
+                    throw Exception("Wrong number")
+                }
             }
 
             m2Value = m1Value
