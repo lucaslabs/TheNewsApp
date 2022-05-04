@@ -3,17 +3,17 @@ package com.thenewsapp.presentation.shownews
 import android.os.Bundle
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
-import com.thenewsapp.data.db.Search
+import com.thenewsapp.data.db.Query
 import com.thenewsapp.data.model.News
 import com.thenewsapp.data.model.Result
-import com.thenewsapp.data.repository.NewsRepository
-import com.thenewsapp.data.repository.SearchTermRepository
+import com.thenewsapp.domain.GetNewsUseCase
+import com.thenewsapp.domain.SaveQueryUseCase
 import kotlinx.coroutines.launch
 
 class SharedNewsViewModel(
     private val savedStateHandle: SavedStateHandle?,
-    private val newsRepository: NewsRepository,
-    private val searchTermRepository: SearchTermRepository,
+    private val getNewsUseCase: GetNewsUseCase,
+    private val saveQueryUseCase: SaveQueryUseCase
 ) : ViewModel() {
 
     companion object {
@@ -22,14 +22,11 @@ class SharedNewsViewModel(
 
     private val _selectedNews = MutableLiveData<News>()
 
-    val allSearchTerms: LiveData<List<Search>>? =
-        searchTermRepository.allSearchTerms?.asLiveData()
-
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
      */
-    fun insert(searchTerm: Search) = viewModelScope.launch {
-        searchTermRepository.insert(searchTerm)
+    fun insert(query: Query) = viewModelScope.launch {
+        saveQueryUseCase(query)
     }
 
     fun searchNews(query: String) = liveData {
@@ -38,8 +35,8 @@ class SharedNewsViewModel(
 
             saveQuery(query)
 
-            runCatching {
-                newsRepository.searchNews(query)
+            kotlin.runCatching {
+               getNewsUseCase(query)
             }.onSuccess {
                 emit(Result.Success(it.news))
             }.onFailure {
@@ -61,8 +58,8 @@ class SharedNewsViewModel(
     class Factory(
         owner: SavedStateRegistryOwner,
         defaultState: Bundle?,
-        private val newsRepository: NewsRepository,
-        private val searchTermRepository: SearchTermRepository,
+        private val getNewsUseCase: GetNewsUseCase,
+        private val saveQueryUseCase: SaveQueryUseCase
     ) : AbstractSavedStateViewModelFactory(owner, defaultState) {
 
         @Suppress("UNCHECKED_CAST")
@@ -73,7 +70,7 @@ class SharedNewsViewModel(
         ): T {
             if (modelClass.isAssignableFrom(SharedNewsViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return SharedNewsViewModel(handle, newsRepository, searchTermRepository) as T
+                return SharedNewsViewModel(handle, getNewsUseCase, saveQueryUseCase) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }

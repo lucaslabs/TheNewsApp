@@ -2,6 +2,10 @@ package com.thenewsapp.data
 
 import com.thenewsapp.data.net.ApiKeyInterceptor
 import com.thenewsapp.data.repository.NewsRepository
+import com.thenewsapp.data.repository.QueryRepository
+import com.thenewsapp.domain.GetNewsUseCase
+import com.thenewsapp.domain.SaveQueryUseCase
+import com.thenewsapp.presentation.NewsApplication
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -26,9 +30,26 @@ object DependencyProvider {
             .build()
     }
 
-    fun <T> provideService(service: Class<T>): T {
+    fun provideGetNewsUseCase() =
+        GetNewsUseCase(
+            provideNewsRepository(
+                provideService(NewsService::class.java)
+            )
+        )
+
+    fun provideSaveQueryUseCase(application: NewsApplication) =
+        SaveQueryUseCase(
+            provideQueryRepository(application)
+        )
+
+    private fun <T> provideService(service: Class<T>): T {
         return retrofit.create(service)
     }
 
-    fun provideRepository(newsService: NewsService) = NewsRepository(newsService)
+    private fun provideNewsRepository(newsService: NewsService) = NewsRepository(newsService)
+
+    private fun provideQueryRepository(application: NewsApplication) =
+        QueryRepository(application.database.searchTermDao())
+
+
 }

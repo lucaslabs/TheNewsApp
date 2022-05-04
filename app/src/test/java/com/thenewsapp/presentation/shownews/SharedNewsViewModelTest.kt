@@ -6,8 +6,7 @@ import com.thenewsapp.data.model.News
 import com.thenewsapp.data.model.NewsResponse
 import com.thenewsapp.data.model.Result
 import com.thenewsapp.data.repository.NewsRepository
-import com.thenewsapp.data.repository.SearchTermRepository
-import com.thenewsapp.getOrAwaitValue
+import com.thenewsapp.data.repository.QueryRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -41,7 +40,7 @@ class SharedNewsViewModelTest {
     lateinit var newsRepository: NewsRepository
 
     @Mock
-    lateinit var searchTermRepository: SearchTermRepository
+    lateinit var queryRepository: QueryRepository
 
     private lateinit var viewModel: SharedNewsViewModel // SUT
 
@@ -53,7 +52,7 @@ class SharedNewsViewModelTest {
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        viewModel = SharedNewsViewModel(null, newsRepository, searchTermRepository)
+        viewModel = SharedNewsViewModel(null, newsRepository, queryRepository)
 
         // Sets the given [dispatcher] as an underlying dispatcher of [Dispatchers.Main]
         Dispatchers.setMain(testCoroutineDispatcher)

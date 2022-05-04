@@ -1,7 +1,6 @@
 package com.thenewsapp.presentation.shownews
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thenewsapp.R
 import com.thenewsapp.data.DependencyProvider
-import com.thenewsapp.data.NewsService
-import com.thenewsapp.data.db.Search
+import com.thenewsapp.data.db.Query
 import com.thenewsapp.data.model.News
 import com.thenewsapp.data.model.Result
 import com.thenewsapp.databinding.ShowNewsFragmentBinding
@@ -28,13 +26,15 @@ class ShowNewsFragment : Fragment() {
 
     private lateinit var adapter: ShowNewsAdapter
 
-    private val newsService = DependencyProvider.provideService(NewsService::class.java)
-
-    private val newsRepository = DependencyProvider.provideRepository(newsService)
-
     private val viewModel: SharedNewsViewModel by activityViewModels {
-        SharedNewsViewModel.Factory(this, null, newsRepository,
-            (requireActivity().application as NewsApplication).searchTermRepository)
+        SharedNewsViewModel.Factory(
+            owner = this,
+            defaultState = null,
+            getNewsUseCase = DependencyProvider.provideGetNewsUseCase(),
+            saveQueryUseCase = DependencyProvider.provideSaveQueryUseCase(
+                requireActivity().application as NewsApplication
+            )
+        )
     }
 
     override fun onCreateView(
@@ -60,8 +60,6 @@ class ShowNewsFragment : Fragment() {
             binding.tvEmpty.text = getString(R.string.search_favorite_topic)
             searchNewsAndObserve("")
         }
-
-        observeSearchTerms()
     }
 
     private fun setupSearchView() {
@@ -104,7 +102,7 @@ class ShowNewsFragment : Fragment() {
                         showNews(news)
 
                         // Insert search query only if there are news
-                        viewModel.insert(Search(query = query))
+                        viewModel.insert(Query(query = query))
                     } else {
                         showNoResults()
                     }
@@ -130,12 +128,6 @@ class ShowNewsFragment : Fragment() {
         adapter.clearAll()
         binding.tvEmpty.show()
         binding.tvEmpty.text = getString(R.string.no_results_found)
-    }
-
-    private fun observeSearchTerms() {
-        viewModel.allSearchTerms?.observe(viewLifecycleOwner, { searchTerms ->
-            Log.d("Search terms: ", "$searchTerms")
-        })
     }
 
     private fun onNewsSelected(news: News) {

@@ -6,10 +6,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import kotlinx.coroutines.CoroutineScope
 
-@Database(entities = [Search::class], version = 1, exportSchema = false)
+@Database(entities = [Query::class], version = 1, exportSchema = false)
 public abstract class SearchTermRoomDatabase : RoomDatabase() {
 
-    abstract fun searchTermDao(): SearchTermDao
+    abstract fun searchTermDao(): QueryDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the same time.
