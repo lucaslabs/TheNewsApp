@@ -5,8 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import com.thenewsapp.data.model.News
 import com.thenewsapp.data.model.NewsResponse
 import com.thenewsapp.data.model.Result
-import com.thenewsapp.data.repository.NewsRepository
-import com.thenewsapp.data.repository.QueryRepository
+import com.thenewsapp.domain.GetNewsUseCase
+import com.thenewsapp.domain.SaveQueryUseCase
+import com.thenewsapp.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -37,10 +38,10 @@ class SharedNewsViewModelTest {
     private val testCoroutineDispatcher = TestCoroutineDispatcher()
 
     @Mock
-    lateinit var newsRepository: NewsRepository
+    lateinit var getNewsUseCase: GetNewsUseCase
 
     @Mock
-    lateinit var queryRepository: QueryRepository
+    lateinit var saveQueryUseCase: SaveQueryUseCase
 
     private lateinit var viewModel: SharedNewsViewModel // SUT
 
@@ -51,8 +52,8 @@ class SharedNewsViewModelTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
-        viewModel = SharedNewsViewModel(null, newsRepository, queryRepository)
+        MockitoAnnotations.openMocks(this)
+        viewModel = SharedNewsViewModel(null, getNewsUseCase, saveQueryUseCase)
 
         // Sets the given [dispatcher] as an underlying dispatcher of [Dispatchers.Main]
         Dispatchers.setMain(testCoroutineDispatcher)
@@ -107,7 +108,7 @@ class SharedNewsViewModelTest {
         // Given
         val expectedNews = arrayListOf<News>()
         val mockResponse = NewsResponse(expectedNews)
-        given(newsRepository.searchNews(VALID_QUERY)).willReturn(mockResponse)
+        given(getNewsUseCase(VALID_QUERY)).willReturn(mockResponse)
 
         // When
         val liveDataResponse = viewModel.searchNews(VALID_QUERY)
@@ -124,7 +125,7 @@ class SharedNewsViewModelTest {
     @Test
     fun `search news with a not valid query should return error event`() = runBlockingTest {
         // Given
-        `when`(newsRepository.searchNews(NOT_VALID_QUERY)).thenThrow(RuntimeException())
+        `when`(getNewsUseCase(NOT_VALID_QUERY)).thenThrow(RuntimeException())
 
         // When
         val liveDataResponse = viewModel.searchNews(NOT_VALID_QUERY)
@@ -140,7 +141,7 @@ class SharedNewsViewModelTest {
     @Test
     fun `search news with an empty query should return null event`() = runBlockingTest {
         // Given
-        given(newsRepository.searchNews(EMPTY_QUERY)).willReturn(null)
+        given(getNewsUseCase(EMPTY_QUERY)).willReturn(null)
 
         // When
         val liveDataResponse = viewModel.searchNews(EMPTY_QUERY)
