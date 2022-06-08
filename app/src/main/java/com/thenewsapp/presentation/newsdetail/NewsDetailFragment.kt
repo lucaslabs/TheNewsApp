@@ -20,7 +20,9 @@ import com.thenewsapp.data.model.News
 import com.thenewsapp.databinding.NewsDetailFragmentBinding
 import com.thenewsapp.presentation.loadUrl
 import com.thenewsapp.presentation.shownews.SharedNewsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class NewsDetailFragment : Fragment() {
 
     private val viewModel: SharedNewsViewModel by activityViewModels()

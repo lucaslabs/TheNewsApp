@@ -1,19 +1,20 @@
 package com.thenewsapp.presentation.shownews
 
-import android.os.Bundle
 import androidx.lifecycle.*
-import androidx.savedstate.SavedStateRegistryOwner
 import com.thenewsapp.data.db.Query
 import com.thenewsapp.data.model.News
 import com.thenewsapp.data.model.Result
 import com.thenewsapp.domain.GetNewsUseCase
 import com.thenewsapp.domain.SaveQueryUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SharedNewsViewModel(
+@HiltViewModel
+class SharedNewsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle?,
     private val getNewsUseCase: GetNewsUseCase,
-    private val saveQueryUseCase: SaveQueryUseCase
+    private val saveQueryUseCase: SaveQueryUseCase,
 ) : ViewModel() {
 
     companion object {
@@ -54,25 +55,4 @@ class SharedNewsViewModel(
     fun getQuery() = savedStateHandle?.get<String>(QUERY_KEY)
 
     private fun saveQuery(query: String) = savedStateHandle?.set(QUERY_KEY, query)
-
-    class Factory(
-        owner: SavedStateRegistryOwner,
-        defaultState: Bundle?,
-        private val getNewsUseCase: GetNewsUseCase,
-        private val saveQueryUseCase: SaveQueryUseCase
-    ) : AbstractSavedStateViewModelFactory(owner, defaultState) {
-
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel?> create(
-            key: String,
-            modelClass: Class<T>,
-            handle: SavedStateHandle,
-        ): T {
-            if (modelClass.isAssignableFrom(SharedNewsViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return SharedNewsViewModel(handle, getNewsUseCase, saveQueryUseCase) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
-        }
-    }
 }

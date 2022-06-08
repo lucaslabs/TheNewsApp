@@ -11,31 +11,22 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thenewsapp.R
-import com.thenewsapp.data.DependencyProvider
 import com.thenewsapp.data.db.Query
 import com.thenewsapp.data.model.News
 import com.thenewsapp.data.model.Result
 import com.thenewsapp.databinding.ShowNewsFragmentBinding
-import com.thenewsapp.presentation.NewsApplication
 import com.thenewsapp.presentation.hide
 import com.thenewsapp.presentation.show
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ShowNewsFragment : Fragment() {
 
     private lateinit var binding: ShowNewsFragmentBinding
 
     private lateinit var adapter: ShowNewsAdapter
 
-    private val viewModel: SharedNewsViewModel by activityViewModels {
-        SharedNewsViewModel.Factory(
-            owner = this,
-            defaultState = null,
-            getNewsUseCase = DependencyProvider.provideGetNewsUseCase(),
-            saveQueryUseCase = DependencyProvider.provideSaveQueryUseCase(
-                requireActivity().application as NewsApplication
-            )
-        )
-    }
+    private val viewModel: SharedNewsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -89,7 +80,7 @@ class ShowNewsFragment : Fragment() {
     }
 
     private fun searchNewsAndObserve(query: String) {
-        viewModel.searchNews(query).observe(viewLifecycleOwner, { result ->
+        viewModel.searchNews(query).observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Loading -> {
                     binding.pbLoading.show()
@@ -112,7 +103,7 @@ class ShowNewsFragment : Fragment() {
                     showError(result.exception.message)
                 }
             }
-        })
+        }
     }
 
     private fun showNews(news: ArrayList<News>) = with(binding) {

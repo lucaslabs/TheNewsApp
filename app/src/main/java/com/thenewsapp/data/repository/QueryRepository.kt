@@ -4,8 +4,9 @@ import androidx.annotation.WorkerThread
 import com.thenewsapp.data.db.Query
 import com.thenewsapp.data.db.QueryDao
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class QueryRepository(private val queryDao: QueryDao) {
+class QueryRepository @Inject constructor(private val queryDao: QueryDao) {
 
     // Room executes all queries on a separate thread.
     // Observed Flow will notify the observer when the data has changed.
