@@ -1,11 +1,11 @@
-package com.thenewsapp.presentation.compose
+package com.thenewsapp.presentation.compose.sandboxapp
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
-import com.thenewsapp.presentation.compose.utils.BasicsTheme
+import com.thenewsapp.presentation.compose.theme.BasicsTheme
 
 class GreetingActivity : AppCompatActivity() {
 

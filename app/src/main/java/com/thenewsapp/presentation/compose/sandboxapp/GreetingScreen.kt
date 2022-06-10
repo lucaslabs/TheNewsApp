@@ -1,4 +1,4 @@
-package com.thenewsapp.presentation.compose
+package com.thenewsapp.presentation.compose.sandboxapp
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.thenewsapp.presentation.compose.model.CounterState
-import com.thenewsapp.presentation.compose.model.GreetingItemState
-import com.thenewsapp.presentation.compose.utils.BasicsTheme
+import com.thenewsapp.presentation.compose.sandboxapp.model.CounterState
+import com.thenewsapp.presentation.compose.sandboxapp.model.GreetingItemState
+import com.thenewsapp.presentation.compose.theme.BasicsTheme
 
 @Composable
 fun GreetingScreen(
@@ -30,7 +30,7 @@ fun GreetingScreen(
         GreetingList(
             greetingItemStates = greetingItemStates,
             onItemClick = onItemClick,
-            modifier = Modifier.Companion.weight(1f),
+            modifier = Modifier.weight(1f),
         )
         Counter(
             counterState = counterState,
