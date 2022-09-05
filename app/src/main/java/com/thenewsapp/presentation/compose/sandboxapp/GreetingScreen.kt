@@ -3,9 +3,7 @@ package com.thenewsapp.presentation.compose.sandboxapp
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
@@ -39,6 +37,7 @@ fun GreetingScreen(
     }
 }
 
+// region Reusable components
 @Composable
 fun GreetingList(
     greetingItemStates: List<GreetingItemState>,
@@ -57,7 +56,6 @@ fun GreetingList(
     }
 }
 
-// region Components
 @Composable
 fun GreetingItem(
     position: Int,
@@ -88,16 +86,41 @@ fun Counter(
         if (counterState.count % 2 == 0) MaterialTheme.colors.primary
         else MaterialTheme.colors.secondary
     )
-    Button(
-        colors = ButtonDefaults.buttonColors(color),
-        onClick = { onCounterClick(counterState.count + 1) }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.End
     ) {
-        Text(text = "Clicked ${counterState.count} times")
+        Button(
+            colors = ButtonDefaults.buttonColors(color),
+            onClick = { onCounterClick(counterState.count + 1) },
+        ) {
+            Text(text = "Clicked ${counterState.count} times")
+        }
     }
 }
 // endregion
 
-@Preview(showBackground = true)
+@Preview(name = "background", showBackground = true)
+@Preview(
+    name = "phone",
+    showBackground = true,
+    device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480"
+)
+@Preview(
+    name = "landscape",
+    showBackground = true,
+    device = "spec:shape=Normal,width=640,height=360,unit=dp,dpi=480"
+)
+@Preview(
+    name = "foldable",
+    showBackground = true,
+    device = "spec:shape=Normal,width=673,height=841,unit=dp,dpi=480"
+)
+@Preview(
+    name = "tablet",
+    showBackground = true,
+    device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480"
+)
 @Composable
 fun Preview() {
     BasicsTheme(darkTheme = false) {
