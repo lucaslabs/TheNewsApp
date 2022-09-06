@@ -13,19 +13,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--        <activity-->
-        <!--            android:name=".presentation.MainActivity"-->
-        <!--            android:exported="true"-->
-        <!--            android:windowSoftInputMode="stateHidden">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="android.intent.action.MAIN" />-->
-
-        <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-        <!--            </intent-filter>-->
-        <!--        </activity>-->
+        <!-- <activity -->
+        <!-- android:name=".presentation.MainActivity" -->
+        <!-- android:exported="true" -->
+        <!-- android:windowSoftInputMode="stateHidden"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
         <!-- Compose -->
         <activity
-            android:name=".presentation.compose.greetingapp.GreetingActivity"
+            android:name=".presentation.compose.reverseapp.ReverseTextActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,6 +32,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".presentation.compose.greetingapp.GreetingActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
