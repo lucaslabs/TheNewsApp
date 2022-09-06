@@ -12,14 +12,15 @@ val Teal200 = Color(0xFF80CBC4)
 val Red800 = Color(0xffd00036)
 val Red200 = Color(0xfff297a2)
 
-val DarkColorsPalette = darkColors(
+// Dark and Light color palettes
+val DarkColorPalette = darkColors(
     primary = Purple200,
     primaryVariant = Purple700,
     secondary = Teal200,
     error = Red200
 )
 
-val LightColorsPalette = lightColors(
+val LightColorPalette = lightColors(
     primary = Purple500,
     primaryVariant = Purple700,
     secondary = Teal200,

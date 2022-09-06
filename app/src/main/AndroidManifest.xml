@@ -25,7 +25,7 @@
         <!--        </activity>-->
         <!-- Compose -->
         <activity
-            android:name=".presentation.compose.sandboxapp.GreetingActivity"
+            android:name=".presentation.compose.greetingapp.GreetingActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

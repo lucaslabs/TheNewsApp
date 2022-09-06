@@ -1,12 +1,12 @@
-package com.thenewsapp.presentation.compose.sandboxapp
+package com.thenewsapp.presentation.compose.greetingapp
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import com.thenewsapp.presentation.compose.sandboxapp.model.CounterState
-import com.thenewsapp.presentation.compose.sandboxapp.model.GreetingItemState
+import com.thenewsapp.presentation.compose.greetingapp.model.CounterState
+import com.thenewsapp.presentation.compose.greetingapp.model.GreetingItemState
 
 class GreetingViewModel : ViewModel() {
 

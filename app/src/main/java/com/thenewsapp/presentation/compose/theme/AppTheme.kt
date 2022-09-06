@@ -5,11 +5,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 
 @Composable
-fun BasicsTheme(
+fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val colors = if (darkTheme) DarkColorsPalette else LightColorsPalette
+    val colors = if (darkTheme) DarkColorPalette else LightColorPalette
     MaterialTheme(
         colors = colors,
         content = content

@@ -1,4 +1,4 @@
-package com.thenewsapp.presentation.compose.sandboxapp.model
+package com.thenewsapp.presentation.compose.greetingapp.model
 
 data class GreetingItemState(
     val id: Int,

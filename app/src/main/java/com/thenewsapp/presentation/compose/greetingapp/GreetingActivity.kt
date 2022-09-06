@@ -1,11 +1,11 @@
-package com.thenewsapp.presentation.compose.sandboxapp
+package com.thenewsapp.presentation.compose.greetingapp
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
-import com.thenewsapp.presentation.compose.theme.BasicsTheme
+import com.thenewsapp.presentation.compose.theme.AppTheme
 
 class GreetingActivity : AppCompatActivity() {
 
@@ -20,7 +20,7 @@ class GreetingActivity : AppCompatActivity() {
             val counterState by viewModel.counterState
 
             // Theme
-            BasicsTheme {
+            AppTheme {
 
                 // Screen
                 GreetingScreen(
