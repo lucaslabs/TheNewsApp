@@ -21,9 +21,16 @@ fun ReverseTextScreen(viewModel: ReverseTextViewModel = ReverseTextViewModel()) 
     Column(modifier = Modifier.fillMaxSize()) {
         var inputText by remember { mutableStateOf("") }
 
-        val textState = viewModel.textValue.observeAsState()
+        val reversedTextState = viewModel.reversedText.observeAsState()
 
-        ReverseText(textState.value)
+        reversedTextState.value?.let { text ->
+            Text(
+                text = text,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxWidth()
+            )
+        }
 
         TextField(
             value = inputText,
@@ -33,6 +40,7 @@ fun ReverseTextScreen(viewModel: ReverseTextViewModel = ReverseTextViewModel()) 
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .fillMaxWidth()
         )
+
         Button(
             onClick = { viewModel.onTextValueChange(inputText) },
             modifier = Modifier
@@ -40,18 +48,6 @@ fun ReverseTextScreen(viewModel: ReverseTextViewModel = ReverseTextViewModel()) 
                 .fillMaxWidth()) {
             Text(text = stringResource(id = R.string.reverse_text))
         }
-    }
-}
-
-@Composable
-fun ReverseText(text: String?) {
-    if (text != null) {
-        Text(
-            text = text,
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .fillMaxWidth()
-        )
     }
 }
 

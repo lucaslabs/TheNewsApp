@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 
 class ReverseTextViewModel : ViewModel() {
 
-    private val _textValue = MutableLiveData<String>("")
-    val textValue: LiveData<String> = _textValue
+    private val _reversedText = MutableLiveData("")
+    val reversedText: LiveData<String> = _reversedText
 
     fun onTextValueChange(text: String) {
-        _textValue.value = text.reversed()
+        _reversedText.value = text.reversed()
     }
 }
