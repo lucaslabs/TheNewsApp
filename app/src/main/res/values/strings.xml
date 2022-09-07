@@ -5,6 +5,8 @@
     <string name="no_results_found">No results found for your search criteria. Try with a new one :)</string>
     <string name="author">%s @ </string>
     <string name="read_more_at">Read more at</string>
+    <string name="reversed_text">Reversed text: %s</string>
     <string name="enter_text">Enter text</string>
     <string name="reverse_text">Reverse text</string>
+    <string name="original_input_list">Original input list</string>
 </resources>
