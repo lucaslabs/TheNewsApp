@@ -32,16 +32,10 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
-        useIR = true
     }
 
     buildFeatures {
-        compose true
         viewBinding true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion versions.compose
     }
 
     buildTypes {
@@ -65,13 +59,7 @@ dependencies {
     kapt deps.hilt.compiler
 
     implementation deps.app_compat
-    implementation deps.compose.activity
-    implementation deps.compose.livedata
-    implementation deps.compose.material
-    implementation deps.compose.tooling
-    implementation deps.compose.ui
-    implementation deps.constraint_layout
-    implementation deps.compose.ui
+   implementation deps.constraint_layout
     implementation deps.core_ktx
     implementation deps.coroutines.core
     implementation deps.coroutines.android
