@@ -26,10 +26,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    packagingOptions {
-        exclude 'META-INF/atomicfu.kotlin_module'
-    }
-
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
@@ -48,6 +44,7 @@ android {
     packagingOptions {
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/atomicfu.kotlin_module'
     }
 }
 
@@ -59,7 +56,7 @@ dependencies {
     kapt deps.hilt.compiler
 
     implementation deps.app_compat
-   implementation deps.constraint_layout
+    implementation deps.constraint_layout
     implementation deps.core_ktx
     implementation deps.coroutines.core
     implementation deps.coroutines.android

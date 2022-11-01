@@ -32,9 +32,9 @@ class MiscPlayground {
     // Brute force: O(n^2) time and O(1) space complexities
     private fun twoSum(nums: IntArray, target: Int): IntArray {
         // Edge cases: What if nums is null, or has only 1 num in it?
-        for(i in nums.indices) {
+        for (i in nums.indices) {
             for (j in nums.indices) {
-                if(i != j && nums[i] + nums[j] == target) {
+                if (i != j && nums[i] + nums[j] == target) {
                     return intArrayOf(i, j)
                 }
             }
@@ -751,5 +751,37 @@ class MiscPlayground {
             if (n.code > max) n -= size
             n
         }.joinToString("")
+    }
+
+    /**
+     * Majority element:
+     * Given an array nums of size n, return the majority element.
+     * The majority element is the element that appears more than ⌊n / 2⌋ times.
+     * You may assume that the majority element always exists in the array.
+     */
+    @Test
+    fun majorityElement() {
+        // Given
+        val nums = intArrayOf(3, 2, 3)
+        val expected = 3
+
+        // When
+        val output = majorityElement(nums)
+
+        // Then
+        assertThat(output, equalTo(expected))
+    }
+
+    private fun majorityElement(nums: IntArray): Int {
+        // Boyer-Moore Algorithm
+        var count = 0
+        var candidate = 0
+        nums.forEach { num ->
+            if (count == 0) {
+                candidate = num
+            }
+            count += if (num == candidate) 1 else -1
+        }
+        return candidate
     }
 }
