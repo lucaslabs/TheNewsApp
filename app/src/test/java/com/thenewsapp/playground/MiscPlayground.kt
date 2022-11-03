@@ -784,4 +784,51 @@ class MiscPlayground {
         }
         return candidate
     }
+
+    /**
+     * Given an array of integers [1 4 2 3 5 6 ], apply an alternating sort of the integers
+     * and arrange the elements in it so that: o[0] ≤ o[1] ≥ o[2] ≤ o[3] ≥ o[4]...
+     * So, rearrange the array such that every second element of the array is greater
+     * than its left and right elements
+     *
+     * For example:
+     * 1 4 2 3 5 6 ->  1 ≤ 4 ≥ 2 ≤ 5 ≥ 3 ≤ 6
+     * https://www.techiedelight.com/rearrange-the-array-with-alternate-high-and-low-elements
+     */
+
+    @Test
+    fun rearrangeArray() {
+        val input = intArrayOf(1, 4, 2, 3, 5, 6)
+
+        val output = rearrangeArray(input)
+
+        assertThat(intArrayOf(1, 4, 2, 5, 3, 6), equalTo(output))
+    }
+
+    // Function to rearrange the array such that every second element
+    // of the array is greater than its left and right elements
+    private fun rearrangeArray(nums: IntArray) : IntArray {
+
+        // start from the second element and increment index by 2 for each iteration of the loop
+        for (i in 1..nums.size step 2) {
+
+            // if the previous element is greater than the current element, swap the elements
+            if (nums[i - 1] > nums[i]) {
+                swap(nums, i - 1, i)
+            }
+
+            // if the next element is greater than the current element, swap the elements
+            if(i + 1 < nums.size && nums[i +1] > nums[i]) {
+                swap(nums, i + 1, i)
+            }
+        }
+
+        return nums
+    }
+
+    private fun swap(nums: IntArray, i: Int, j: Int) {
+        val temp = nums[i]
+        nums[i] = nums[j]
+        nums[j] = temp
+    }
 }
