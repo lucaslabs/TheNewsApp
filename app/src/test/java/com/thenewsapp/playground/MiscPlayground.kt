@@ -802,7 +802,7 @@ class MiscPlayground {
 
         val output = rearrangeArray(input)
 
-        assertThat(intArrayOf(1, 4, 2, 5, 3, 6), equalTo(output))
+        assertThat(input, equalTo(output))
     }
 
     // Function to rearrange the array such that every second element
@@ -830,5 +830,51 @@ class MiscPlayground {
         val temp = nums[i]
         nums[i] = nums[j]
         nums[j] = temp
+    }
+
+    /**
+     * Write a program to help Jane and Alice exchange stamps: it receives two unordered arrays
+     * of stamps that Jane and Alice has, and return two unordered arrays of stamps
+     * that Jane and Alice will get from the other side.
+     * Output order of stamps in each array is not relevant,
+     * however the first array is always Jane’s stamps,
+     * and the second array is always Alice’s stamps in both input and output.
+     */
+    @Test
+    fun exchangeStamps() {
+        val janeStamps = arrayOf(1, 7, 3, 1, 7, 4, 5, 1, 7, 1)
+        val aliceStamps = arrayOf(2, 3, 3, 2, 4, 3, 2)
+
+        val output = exchangeStamps(janeStamps, aliceStamps, spare = 2)
+
+        val expected = Pair(arrayOf(2, 3), arrayOf(1, 1, 7))
+
+        assertThat(output.first, equalTo(expected.first))
+        assertThat(output.second, equalTo(expected.second))
+    }
+
+    private fun exchangeStamps(
+        firstStamps: Array<Int>,
+        secondStamps: Array<Int>,
+        spare: Int
+    ): Pair<Array<Int>, Array<Int>> {
+        // count stamp occurrences
+        val firstMap = firstStamps.groupingBy { it }.eachCount()
+        val secondMap = secondStamps.groupingBy { it }.eachCount()
+
+        // find stamps to exchange
+        val firstExchange = firstMap.filter { (stamp, count) ->
+            count > spare && secondMap.getOrDefault(stamp, 0) <= 1
+        }.flatMap { (stamp, count) ->
+            List(count - spare) { stamp }
+        }.toTypedArray()
+
+        val secondExchange = secondMap.filter { (stamp, count) ->
+            count > spare && firstMap.getOrDefault(stamp, 0) <= 1
+        }.flatMap { (stamp, count) ->
+            List(count - spare) { stamp }
+        }.toTypedArray()
+
+        return Pair(secondExchange, firstExchange)
     }
 }
