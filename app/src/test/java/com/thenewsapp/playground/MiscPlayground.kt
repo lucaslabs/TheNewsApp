@@ -169,6 +169,7 @@ class MiscPlayground {
                 'I' -> {
                     output += 1
                 }
+
                 'V' -> {
                     output += try {
                         val prev = s[i - 1]
@@ -177,6 +178,7 @@ class MiscPlayground {
                         5
                     }
                 }
+
                 'X' -> {
                     output += try {
                         val prev = s[i - 1]
@@ -185,6 +187,7 @@ class MiscPlayground {
                         10
                     }
                 }
+
                 'L' -> {
                     output += try {
                         val prev = s[i - 1]
@@ -193,6 +196,7 @@ class MiscPlayground {
                         50
                     }
                 }
+
                 'C' -> {
                     output += try {
                         val prev = s[i - 1]
@@ -201,6 +205,7 @@ class MiscPlayground {
                         100
                     }
                 }
+
                 'D' -> {
                     output += try {
                         val prev = s[i - 1]
@@ -209,6 +214,7 @@ class MiscPlayground {
                         500
                     }
                 }
+
                 'M' -> {
                     output += try {
                         val prev = s[i - 1]
@@ -238,9 +244,11 @@ class MiscPlayground {
                 value >= m1Value -> {
                     result += value
                 }
+
                 m1Value >= m2Value -> {
                     result -= value
                 }
+
                 else -> {
                     throw Exception("Wrong number")
                 }
@@ -276,6 +284,7 @@ class MiscPlayground {
                         else -> 1
                     }
                 }
+
                 'V' -> output += 5
                 'X' -> {
                     output += when (prev) {
@@ -283,6 +292,7 @@ class MiscPlayground {
                         else -> 10
                     }
                 }
+
                 'L' -> output += 50
                 'C' -> {
                     output += when (prev) {
@@ -290,6 +300,7 @@ class MiscPlayground {
                         else -> 100
                     }
                 }
+
                 'D' -> output += 500
                 'M' -> output += 1000
             }
@@ -807,7 +818,7 @@ class MiscPlayground {
 
     // Function to rearrange the array such that every second element
     // of the array is greater than its left and right elements
-    private fun rearrangeArray(nums: IntArray) : IntArray {
+    private fun rearrangeArray(nums: IntArray): IntArray {
 
         // start from the second element and increment index by 2 for each iteration of the loop
         for (i in 1..nums.size step 2) {
@@ -818,7 +829,7 @@ class MiscPlayground {
             }
 
             // if the next element is greater than the current element, swap the elements
-            if(i + 1 < nums.size && nums[i +1] > nums[i]) {
+            if (i + 1 < nums.size && nums[i + 1] > nums[i]) {
                 swap(nums, i + 1, i)
             }
         }
@@ -842,13 +853,15 @@ class MiscPlayground {
      */
     @Test
     fun exchangeStamps() {
+        // Given
         val janeStamps = arrayOf(1, 7, 3, 1, 7, 4, 5, 1, 7, 1)
         val aliceStamps = arrayOf(2, 3, 3, 2, 4, 3, 2)
 
+        // When
         val output = exchangeStamps(janeStamps, aliceStamps, spare = 2)
 
+        // Then
         val expected = Pair(arrayOf(2, 3), arrayOf(1, 1, 7))
-
         assertThat(output.first, equalTo(expected.first))
         assertThat(output.second, equalTo(expected.second))
     }

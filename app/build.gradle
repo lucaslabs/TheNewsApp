@@ -60,7 +60,6 @@ dependencies {
     implementation deps.core_ktx
     implementation deps.coroutines.core
     implementation deps.coroutines.android
-    implementation deps.coroutines.test
     implementation deps.fragment.runtime_ktx
     implementation deps.glide.runtime
     implementation deps.hilt.android
@@ -78,6 +77,7 @@ dependencies {
 
     // Testing
     testImplementation deps.arch_core.testing
+    testImplementation deps.coroutines.test
     testImplementation deps.hamcrest
     testImplementation deps.junit
     testImplementation deps.mockito.inline
