@@ -57,6 +57,10 @@ dependencies {
     // Core
     implementation deps.core_ktx
     implementation deps.lifecycle_runtime_ktx
+    implementation deps.lifecycle_runtime_compose
+
+    // Coil
+    implementation deps.coil
 
     // Compose
     implementation deps.compose.activity_compose
@@ -64,6 +68,7 @@ dependencies {
     implementation deps.compose.material3
     implementation deps.compose.ui
     implementation deps.compose.ui_graphics
+    implementation 'com.google.android.material:material:1.9.0'
     debugImplementation deps.compose.ui_tooling
     implementation deps.compose.ui_tooling_preview
     debugImplementation deps.compose.ui_test_manifest

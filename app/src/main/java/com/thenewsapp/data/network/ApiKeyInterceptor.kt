@@ -12,7 +12,7 @@ class ApiKeyInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
-        val originalHttpUrl = originalRequest.url()
+        val originalHttpUrl = originalRequest.url
 
         // Url customization
         val url = originalHttpUrl.newBuilder()

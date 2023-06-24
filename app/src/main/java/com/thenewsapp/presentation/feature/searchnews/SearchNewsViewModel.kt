@@ -1,6 +1,5 @@
-package com.thenewsapp.presentation.shownews
+package com.thenewsapp.presentation.feature.searchnews
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thenewsapp.data.model.News
@@ -12,33 +11,29 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SharedNewsViewModel @Inject constructor(
+class SearchNewsViewModel @Inject constructor(
     private val getNewsUseCase: GetNewsUseCase
 ) : ViewModel() {
 
-    var newsState = MutableStateFlow<NewsListUiState>(NewsListUiState.Idle)
+    var state = MutableStateFlow<SearchNewsUiState>(SearchNewsUiState.Idle)
         private set
 
-    private val _selectedNews = MutableLiveData<News>()
+    var selectedNews = MutableStateFlow<News?>(null)
+        private set
 
     fun searchNews(query: String) {
         viewModelScope.launch {
             if (query.isNotEmpty()) {
-                newsState.value = NewsListUiState.Loading
+                state.value = SearchNewsUiState.Loading
+
                 getNewsUseCase(query)
                     .catch {
-                        newsState.value = NewsListUiState.Error(it)
+                        state.value = SearchNewsUiState.Error(it)
                     }
                     .collect {
-                        newsState.value = NewsListUiState.Success(it)
+                        state.value = SearchNewsUiState.Success(it)
                     }
             }
         }
     }
-
-    fun setSelectedNews(news: News) {
-        _selectedNews.value = news
-    }
-
-    fun getSelectedNews() = _selectedNews.value
 }
