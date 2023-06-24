@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NewsDao {
 
-    // TODO Filter by latest timestamp
     @Query("SELECT * FROM news WHERE `query` LIKE :query")
     fun getLatestNews(query: String) : Flow<List<NewsEntity>>
 
