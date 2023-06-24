@@ -8,16 +8,17 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thenewsapp.R
-import com.thenewsapp.data.db.Query
 import com.thenewsapp.data.model.News
-import com.thenewsapp.data.model.Result
 import com.thenewsapp.databinding.ShowNewsFragmentBinding
 import com.thenewsapp.presentation.hide
 import com.thenewsapp.presentation.show
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ShowNewsFragment : Fragment() {
@@ -42,15 +43,10 @@ class ShowNewsFragment : Fragment() {
         setupSearchView()
         setupAdapter()
 
-        viewModel.getQuery()?.let { query ->
-            // Get saved query from ViewModel state
-            binding.svNews.setQuery(query, true)
-        } ?: run {
-            // Show empty view
-            binding.tvEmpty.show()
-            binding.tvEmpty.text = getString(R.string.search_favorite_topic)
-            searchNewsAndObserve("")
-        }
+        // Show empty view
+        binding.tvEmpty.show()
+        binding.tvEmpty.text = getString(R.string.search_favorite_topic)
+        searchNewsAndObserve("")
     }
 
     private fun setupSearchView() {
@@ -80,33 +76,40 @@ class ShowNewsFragment : Fragment() {
     }
 
     private fun searchNewsAndObserve(query: String) {
-        viewModel.searchNews(query).observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Loading -> {
-                    binding.pbLoading.show()
-                    binding.tvEmpty.hide()
-                }
-                is Result.Success -> {
-                    binding.pbLoading.hide()
-                    val news = result.data
-                    if (news.isNotEmpty()) {
-                        showNews(news)
+        viewModel.searchNews(query)
 
-                        // Insert search query only if there are news
-                        viewModel.insert(Query(query = query))
-                    } else {
-                        showNoResults()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.newsState.collectLatest { result ->
+                when (result) {
+                    is NewsListUiState.Idle -> {
+                        // no-op
                     }
-                }
-                is Result.Error -> {
-                    binding.pbLoading.hide()
-                    showError(result.exception.message)
+                    is NewsListUiState.Loading -> {
+                        binding.pbLoading.show()
+                        binding.tvEmpty.hide()
+                    }
+                    is NewsListUiState.Success -> {
+                        binding.pbLoading.hide()
+                        binding.tvEmpty.hide()
+                        val news = result.news
+                        if (news.isNotEmpty()) {
+                            showNews(news)
+                        } else {
+                            showNoResults()
+                        }
+                    }
+                    is NewsListUiState.Error -> {
+                        binding.pbLoading.hide()
+                        binding.tvEmpty.hide()
+                        showError(result.throwable.message)
+                    }
                 }
             }
         }
+
     }
 
-    private fun showNews(news: ArrayList<News>) = with(binding) {
+    private fun showNews(news: List<News>) = with(binding) {
         adapter.clearAll()
         adapter.addAll(news)
     }

@@ -1,47 +1,37 @@
 package com.thenewsapp.presentation.shownews
 
-import androidx.lifecycle.*
-import com.thenewsapp.data.db.Query
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.thenewsapp.data.model.News
-import com.thenewsapp.data.model.Result
 import com.thenewsapp.domain.GetNewsUseCase
-import com.thenewsapp.domain.SaveQueryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SharedNewsViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle?,
-    private val getNewsUseCase: GetNewsUseCase,
-    private val saveQueryUseCase: SaveQueryUseCase,
+    private val getNewsUseCase: GetNewsUseCase
 ) : ViewModel() {
 
-    companion object {
-        private const val QUERY_KEY = "query"
-    }
+    var newsState = MutableStateFlow<NewsListUiState>(NewsListUiState.Idle)
+        private set
 
     private val _selectedNews = MutableLiveData<News>()
 
-    /**
-     * Launching a new coroutine to insert the data in a non-blocking way
-     */
-    fun insert(query: Query) = viewModelScope.launch {
-        saveQueryUseCase(query)
-    }
-
-    fun searchNews(query: String) = liveData {
-        if (query.isNotEmpty()) {
-            emit(Result.Loading)
-
-            saveQuery(query)
-
-            kotlin.runCatching {
-               getNewsUseCase(query)
-            }.onSuccess {
-                emit(Result.Success(it.news))
-            }.onFailure {
-                emit(Result.Error(it))
+    fun searchNews(query: String) {
+        viewModelScope.launch {
+            if (query.isNotEmpty()) {
+                newsState.value = NewsListUiState.Loading
+                getNewsUseCase(query)
+                    .catch {
+                        newsState.value = NewsListUiState.Error(it)
+                    }
+                    .collect {
+                        newsState.value = NewsListUiState.Success(it)
+                    }
             }
         }
     }
@@ -51,8 +41,4 @@ class SharedNewsViewModel @Inject constructor(
     }
 
     fun getSelectedNews() = _selectedNews.value
-
-    fun getQuery() = savedStateHandle?.get<String>(QUERY_KEY)
-
-    private fun saveQuery(query: String) = savedStateHandle?.set(QUERY_KEY, query)
 }

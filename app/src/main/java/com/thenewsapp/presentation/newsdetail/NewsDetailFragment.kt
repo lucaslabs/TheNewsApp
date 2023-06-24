@@ -50,7 +50,7 @@ class NewsDetailFragment : Fragment() {
                 ivNews.loadUrl(news.urlToImage)
                 tvTitle.text = safeArgs.title
                 tvAuthor.text = getString(R.string.author, news.author)
-                tvSource.text = news.source.name
+//                tvSource.text = news.source.name
                 tvDescription.text = news.description
 
                 tvUrl.text = getNewsUrl(news)

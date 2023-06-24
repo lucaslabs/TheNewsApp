@@ -1,6 +1,6 @@
-package com.thenewsapp.data.model
+package com.thenewsapp.data.network.model
 
-data class News(
+data class NewsResponse(
     val author: String?,
     val title: String,
     val description: String,

@@ -22,13 +22,13 @@ versions.mockito = "4.5.1"
 versions.okhttp_logging_interceptor = "3.9.0"
 versions.recyclerview = "1.2.0-alpha04" // Concat Adapter
 versions.retrofit = "2.9.0"
-versions.room = "2.4.0"
+versions.room = "2.5.1"
 ext.versions = versions
 
 def build_versions = [:]
-build_versions.min_sdk = 23
-build_versions.compile_sdk = 31
-build_versions.target_sdk = 29
+build_versions.min_sdk = 33
+build_versions.compile_sdk = 33
+build_versions.target_sdk = 33
 build_versions.build_tools = "31.0.0"
 ext.build_versions = build_versions
 

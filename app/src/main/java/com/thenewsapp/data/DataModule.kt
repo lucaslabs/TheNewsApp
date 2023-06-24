@@ -2,9 +2,9 @@ package com.thenewsapp.data
 
 import android.content.Context
 import androidx.room.Room
-import com.thenewsapp.data.db.QueryDao
-import com.thenewsapp.data.db.QueryDatabase
-import com.thenewsapp.data.net.ApiKeyInterceptor
+import com.thenewsapp.data.database.NewsDao
+import com.thenewsapp.data.database.NewsDatabase
+import com.thenewsapp.data.network.ApiKeyInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,16 +49,16 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideQueryDatabase(@ApplicationContext context: Context): QueryDatabase =
+    fun provideNewsDatabase(@ApplicationContext context: Context): NewsDatabase =
         Room.databaseBuilder(
             context,
-            QueryDatabase::class.java,
-            QueryDatabase.DATABASE_NAME
+            NewsDatabase::class.java,
+            NewsDatabase.DATABASE_NAME
         ).build()
 
     @Provides
     @Singleton
-    fun provideQueryDao(queryDatabase: QueryDatabase): QueryDao =
-        queryDatabase.queryDao()
+    fun provideNewsDao(newsDatabase: NewsDatabase): NewsDao =
+        newsDatabase.newsDao()
 
 }
