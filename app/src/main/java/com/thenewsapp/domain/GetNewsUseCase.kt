@@ -1,12 +1,12 @@
 package com.thenewsapp.domain
 
-import com.thenewsapp.data.model.NewsResponse
+import com.thenewsapp.data.model.News
 import com.thenewsapp.data.repository.NewsRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetNewsUseCase @Inject constructor(private val newsRepository: NewsRepository) {
 
-    suspend operator fun invoke(query: String): NewsResponse {
-        return newsRepository.searchNews(query)
-    }
+    operator fun invoke(query: String): Flow<List<News>> =
+        newsRepository.searchNewsOfflineFirst(query)
 }

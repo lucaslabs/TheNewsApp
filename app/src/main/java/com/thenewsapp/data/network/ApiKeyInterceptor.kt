@@ -1,4 +1,4 @@
-package com.thenewsapp.data.net
+package com.thenewsapp.data.network
 
 import com.thenewsapp.BuildConfig
 import okhttp3.Interceptor
@@ -11,19 +11,19 @@ class ApiKeyInterceptor : Interceptor {
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val originalRequest = chain.request();
+        val originalRequest = chain.request()
         val originalHttpUrl = originalRequest.url()
 
         // Url customization
         val url = originalHttpUrl.newBuilder()
             .addQueryParameter(API_KEY, BuildConfig.NEWS_API_KEY)
-            .build();
+            .build()
 
         // Request customization
         val request = originalRequest.newBuilder()
             .url(url)
             .build()
 
-        return chain.proceed(request);
+        return chain.proceed(request)
     }
 }

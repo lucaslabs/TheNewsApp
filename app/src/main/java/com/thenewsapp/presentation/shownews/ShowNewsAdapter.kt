@@ -43,7 +43,6 @@ class ShowNewsAdapter(
         fun bind(news: News) = with(binding) {
             ivNews.loadUrl(news.urlToImage)
             tvTitle.text = news.title
-            tvSource.text = news.source.name
             root.setOnClickListener {
                 onNewsSelected(news)
             }
