@@ -2,7 +2,6 @@ package com.thenewsapp.presentation.feature.searchnews
 
 import com.thenewsapp.data.model.News
 
-// TODO Move to Composable screen
 sealed class SearchNewsUiState {
     object Idle : SearchNewsUiState()
     object Loading : SearchNewsUiState()

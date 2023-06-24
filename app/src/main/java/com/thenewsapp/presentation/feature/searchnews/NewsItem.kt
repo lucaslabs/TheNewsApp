@@ -57,7 +57,6 @@ fun NewsItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 8.dp)
-
         ) {
             AsyncImage(
                 model = news.urlToImage,
