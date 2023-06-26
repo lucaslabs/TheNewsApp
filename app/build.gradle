@@ -1,12 +1,12 @@
 plugins {
     id 'com.android.application'
-    id 'kotlin-android'
+    id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'androidx.navigation.safeargs.kotlin'
     id 'dagger.hilt.android.plugin'
 }
 
 android {
+    namespace 'com.thenewsapp'
     compileSdkVersion build_versions.compile_sdk
 
     defaultConfig {
@@ -21,6 +21,13 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -31,54 +38,66 @@ android {
     }
 
     buildFeatures {
-        viewBinding true
+        buildConfig true
+        compose true
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+    composeOptions {
+        kotlinCompilerExtensionVersion versions.compose
     }
 
     packagingOptions {
-        exclude 'META-INF/AL2.0'
-        exclude 'META-INF/LGPL2.1'
-        exclude 'META-INF/atomicfu.kotlin_module'
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    kapt deps.glide.compiler
-    kapt deps.room.compiler
-    kapt deps.hilt.compiler
-
-    implementation deps.app_compat
-    implementation deps.constraint_layout
+    // Core
     implementation deps.core_ktx
-    implementation deps.coroutines.core
-    implementation deps.coroutines.android
-    implementation deps.fragment.runtime_ktx
-    implementation deps.glide.runtime
+    implementation deps.lifecycle_runtime_ktx
+    implementation deps.lifecycle_runtime_compose
+
+    // Coil
+    implementation deps.coil
+
+    // Compose
+    implementation deps.compose.activity_compose
+    implementation platform(deps.compose.bom)
+    implementation deps.compose.material3
+    implementation deps.compose.ui
+    implementation deps.compose.ui_graphics
+    implementation 'com.google.android.material:material:1.9.0'
+    debugImplementation deps.compose.ui_tooling
+    implementation deps.compose.ui_tooling_preview
+    debugImplementation deps.compose.ui_test_manifest
+
+    // Hilt
     implementation deps.hilt.android
-    implementation deps.kotlin.stdlib
-    implementation deps.lifecycle.livedata_ktx
-    implementation deps.lifecycle.viewmodel_ktx
-    implementation deps.lifecycle.viewmodel_savedstate
-    implementation deps.navigation.fragment_ktx
-    implementation deps.navigation.ui_ktx
-    implementation deps.recycler_view
-    implementation deps.retrofit.runtime
-    implementation deps.retrofit.gson
+    kapt deps.hilt.dagger_compiler
+    kapt deps.hilt.androidx_compiler
+    implementation deps.hilt.navigation_compose
+
+    // Navigation
+    implementation deps.navigation_compose
+
+    // Retrofit
+    implementation deps.retrofit.main
+    implementation deps.retrofit.gson_converter
     implementation deps.retrofit.mock
+
+    // Room
     implementation deps.room.ktx
+    kapt deps.room.compiler
 
     // Testing
-    testImplementation deps.arch_core.testing
-    testImplementation deps.coroutines.test
+    // Testing
+    testImplementation deps.junit.main
+    testImplementation deps.coroutines_test
     testImplementation deps.hamcrest
-    testImplementation deps.junit
-    testImplementation deps.mockito.inline
+    testImplementation deps.mockito_inline
+    androidTestImplementation platform(deps.compose.bom)
+    androidTestImplementation deps.junit.androidx_test_ext
+    androidTestImplementation deps.junit.compose_ui_test_junit4
 }

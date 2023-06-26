@@ -9,9 +9,6 @@ buildscript {
     }
 
     dependencies {
-        classpath deps.android_gradle_plugin
-        classpath deps.kotlin.gradle_plugin
-        classpath deps.navigation.safe_args_gradle_plugin
         classpath deps.hilt.gradle_plugin
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -19,11 +16,10 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
+plugins {
+    id 'com.android.application' version '8.0.1' apply false
+    id 'com.android.library' version '8.0.1' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
 }
 
 task clean(type: Delete) {
