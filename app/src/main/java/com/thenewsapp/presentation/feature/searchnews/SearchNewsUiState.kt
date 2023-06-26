@@ -1,7 +1,10 @@
 package com.thenewsapp.presentation.feature.searchnews
 
-import com.thenewsapp.data.model.News
+import com.thenewsapp.domain.model.News
 
+/**
+ * Represents the possible states of search news screen.
+ */
 sealed class SearchNewsUiState {
     object Idle : SearchNewsUiState()
     object Loading : SearchNewsUiState()

@@ -1,7 +1,7 @@
 package com.thenewsapp.presentation.navigation
 
 /**
- * Screen model for navigation purpose.
+ * Represents the different navigation routes of the app.
  */
 sealed class Screen(val route: String) {
     object SearchNews : Screen("search_news")

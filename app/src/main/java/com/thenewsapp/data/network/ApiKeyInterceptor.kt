@@ -4,6 +4,9 @@ import com.thenewsapp.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 
+/**
+ * Interceptor to add the API key to the original request as a query parameter.
+ */
 class ApiKeyInterceptor : Interceptor {
 
     companion object {

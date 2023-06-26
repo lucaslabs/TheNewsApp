@@ -95,8 +95,9 @@ dependencies {
     // Testing
     testImplementation deps.junit.main
     testImplementation deps.coroutines_test
-    testImplementation deps.hamcrest
-    testImplementation deps.mockito_inline
+    testImplementation deps.mockk
+    testImplementation deps.truth
+    testImplementation deps.turbine
     androidTestImplementation platform(deps.compose.bom)
     androidTestImplementation deps.junit.androidx_test_ext
     androidTestImplementation deps.junit.compose_ui_test_junit4

@@ -19,12 +19,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.thenewsapp.R
-import com.thenewsapp.data.model.News
+import com.thenewsapp.domain.model.News
 import com.thenewsapp.presentation.feature.searchnews.SearchNewsViewModel
+import com.thenewsapp.presentation.theme.dimenLarge
+import com.thenewsapp.presentation.theme.dimenMedium
 
 @Preview(showBackground = true)
 @Composable
@@ -41,6 +42,9 @@ fun NewsDetailPreview() {
     )
 }
 
+/**
+ * Detail view of a news item.
+ */
 @Composable
 fun NewsDetailScreen(
     viewModel: SearchNewsViewModel
@@ -57,15 +61,15 @@ fun NewsDetailContent(
     selectedNews?.let {
         Card(
             modifier = Modifier.fillMaxSize(),
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(dimenLarge),
             elevation = CardDefaults.cardElevation(
-                defaultElevation = 8.dp
+                defaultElevation = dimenMedium
             )
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 8.dp)
+                    .padding(horizontal = dimenMedium, vertical = dimenMedium)
 
             ) {
                 AsyncImage(
@@ -77,7 +81,7 @@ fun NewsDetailContent(
                 )
 
                 Text(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(dimenMedium),
                     text = it.title,
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleLarge,
@@ -85,7 +89,7 @@ fun NewsDetailContent(
                 )
 
                 Text(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(dimenMedium),
                     text = it.author ?: "",
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelSmall,
@@ -93,7 +97,7 @@ fun NewsDetailContent(
                 )
 
                 Text(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(dimenMedium),
                     text = it.description,
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodyLarge,
@@ -133,7 +137,7 @@ fun NewsDetailContent(
                 val uriHandler = LocalUriHandler.current
 
                 ClickableText(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(dimenMedium),
                     text = annotatedString,
                     onClick = {
                         annotatedString.getStringAnnotations("URL", it, it)

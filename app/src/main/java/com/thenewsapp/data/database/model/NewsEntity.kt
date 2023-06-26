@@ -3,6 +3,9 @@ package com.thenewsapp.data.database.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/**
+ * Entity model of a news.
+ */
 @Entity(tableName = "news")
 data class NewsEntity(
     @PrimaryKey(autoGenerate = true)
