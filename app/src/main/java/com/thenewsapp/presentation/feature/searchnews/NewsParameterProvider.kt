@@ -1,8 +1,11 @@
 package com.thenewsapp.presentation.feature.searchnews
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.thenewsapp.data.model.News
+import com.thenewsapp.domain.model.News
 
+/**
+ * Provides sample values of list of news to use in preview composable functions.
+ */
 class NewsPreviewParameterProvider : PreviewParameterProvider<List<News>> {
     override val values: Sequence<List<News>> =
         sequenceOf(

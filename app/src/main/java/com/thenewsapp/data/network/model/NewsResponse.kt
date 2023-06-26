@@ -1,5 +1,8 @@
 package com.thenewsapp.data.network.model
 
+/**
+ * Network model of a news.
+ */
 data class NewsResponse(
     val author: String?,
     val title: String,

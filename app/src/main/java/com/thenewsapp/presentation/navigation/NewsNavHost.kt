@@ -11,6 +11,9 @@ import com.thenewsapp.presentation.feature.newsdetail.NewsDetailScreen
 import com.thenewsapp.presentation.feature.searchnews.SearchNewsScreen
 import com.thenewsapp.presentation.feature.searchnews.SearchNewsViewModel
 
+/**
+ * Represents the different navigation routes of the app.
+ */
 @Composable
 fun NewsNavHost(
     modifier: Modifier = Modifier,

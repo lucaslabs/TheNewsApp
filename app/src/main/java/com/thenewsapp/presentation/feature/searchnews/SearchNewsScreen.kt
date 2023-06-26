@@ -31,10 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thenewsapp.R
-import com.thenewsapp.data.model.News
+import com.thenewsapp.domain.model.News
+import com.thenewsapp.presentation.theme.dimenLarge
+import com.thenewsapp.presentation.theme.dimenMedium
+import com.thenewsapp.presentation.theme.dimenXLarge
+import com.thenewsapp.presentation.theme.dimenXXLarge
 
 @Preview(showBackground = true)
 @Composable
@@ -73,6 +76,9 @@ fun ShowErrorPreview() {
     )
 }
 
+/**
+ * Search news screen.
+ */
 @Composable
 fun SearchNewsScreen(
     viewModel: SearchNewsViewModel,
@@ -108,7 +114,7 @@ fun SearchNewsContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp)
+            .padding(dimenMedium)
     ) {
         SearchBar(
             modifier = Modifier
@@ -169,7 +175,7 @@ fun SearchNewsContent(
             is SearchNewsUiState.Loading -> {
                 CircularProgressIndicator(
                     modifier = Modifier
-                        .size(36.dp)
+                        .size(dimenXLarge)
                         .align(Alignment.Center)
                 )
             }
@@ -178,12 +184,12 @@ fun SearchNewsContent(
                 if (result.news.isNotEmpty()) {
                     LazyColumn(
                         modifier = Modifier
-                            .padding(top = 64.dp)
+                            .padding(top = dimenXXLarge)
                             .fillMaxWidth()
                             .align(Alignment.TopStart),
                         state = rememberLazyListState(),
-                        contentPadding = PaddingValues(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        contentPadding = PaddingValues(dimenMedium),
+                        verticalArrangement = Arrangement.spacedBy(dimenLarge)
                     ) {
                         items(items = result.news) { news ->
                             NewsItem(
@@ -198,7 +204,7 @@ fun SearchNewsContent(
                 } else {
                     Text(
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(dimenMedium)
                             .fillMaxWidth()
                             .align(Alignment.Center),
                         text = stringResource(id = R.string.no_results_found),
@@ -212,7 +218,7 @@ fun SearchNewsContent(
             is SearchNewsUiState.Error -> {
                 Text(
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(dimenMedium)
                         .fillMaxWidth()
                         .align(Alignment.Center),
                     text = result.throwable.message ?: stringResource(id = R.string.generic_error),

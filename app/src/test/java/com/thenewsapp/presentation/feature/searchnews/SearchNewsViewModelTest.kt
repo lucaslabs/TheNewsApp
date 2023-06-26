@@ -1,8 +1,8 @@
 package com.thenewsapp.presentation.feature.searchnews
 
 import app.cash.turbine.test
-import com.thenewsapp.data.model.News
-import com.thenewsapp.domain.GetNewsUseCase
+import com.thenewsapp.domain.SearchNewsUseCase
+import com.thenewsapp.domain.model.News
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -18,6 +18,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
+/**
+ * Unit test cases for [SearchNewsViewModel].
+ */
 @ExperimentalCoroutinesApi
 @RunWith(JUnit4::class)
 class SearchNewsViewModelTest {
@@ -26,7 +29,7 @@ class SearchNewsViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     @MockK
-    lateinit var getNewsUseCase: GetNewsUseCase
+    lateinit var searchNewsUseCase: SearchNewsUseCase
 
     private lateinit var viewModel: SearchNewsViewModel
 
@@ -48,13 +51,13 @@ class SearchNewsViewModelTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        viewModel = SearchNewsViewModel(getNewsUseCase)
+        viewModel = SearchNewsViewModel(searchNewsUseCase)
     }
 
     @Test
     fun `search news should show loading`() = runTest {
         // Given
-        every { getNewsUseCase(RESULT_QUERY) } returns emptyFlow()
+        every { searchNewsUseCase(RESULT_QUERY) } returns emptyFlow()
 
         // When
         viewModel.searchNews(RESULT_QUERY)
@@ -69,7 +72,7 @@ class SearchNewsViewModelTest {
     fun `search news with a valid query should show a list of news`() = runTest {
         // Given
         val expectedNews = listOf(news)
-        every { getNewsUseCase(RESULT_QUERY) } returns flowOf(expectedNews)
+        every { searchNewsUseCase(RESULT_QUERY) } returns flowOf(expectedNews)
 
         // When
         viewModel.searchNews(RESULT_QUERY)
@@ -85,7 +88,7 @@ class SearchNewsViewModelTest {
     @Test
     fun `search news with a valid query and empty result should show empty state`() = runTest {
         // Given
-        every { getNewsUseCase(NO_RESULT_QUERY) } returns flowOf(emptyList())
+        every { searchNewsUseCase(NO_RESULT_QUERY) } returns flowOf(emptyList())
 
         // When
         viewModel.searchNews(NO_RESULT_QUERY)
@@ -101,7 +104,7 @@ class SearchNewsViewModelTest {
     @Test
     fun `search news not valid query should show error`() = runTest {
         // Given
-        every { getNewsUseCase(ERROR_QUERY) } returns flow { throw IllegalStateException("Error message") }
+        every { searchNewsUseCase(ERROR_QUERY) } returns flow { throw IllegalStateException("Error message") }
 
         // When
         viewModel.searchNews(ERROR_QUERY)

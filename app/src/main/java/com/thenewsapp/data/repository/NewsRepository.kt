@@ -1,11 +1,11 @@
 package com.thenewsapp.data.repository
 
-import com.thenewsapp.data.NewsService
 import com.thenewsapp.data.database.NewsDao
-import com.thenewsapp.data.mapper.asEntity
-import com.thenewsapp.data.mapper.asExternalModel
-import com.thenewsapp.data.model.News
+import com.thenewsapp.data.network.NewsService
 import com.thenewsapp.data.network.model.NewsListResponse
+import com.thenewsapp.domain.mapper.asEntity
+import com.thenewsapp.domain.mapper.asExternalModel
+import com.thenewsapp.domain.model.News
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -27,8 +27,14 @@ class NewsRepository @Inject constructor(
         emit(newsService.searchNews(query))
     }.flowOn(Dispatchers.IO)
 
+    /**
+     * Searches for news by a given query with offline first approach.
+     *
+     * If there is any result, return it to the consumer.
+     * If the result is empty, call the service API.
+     */
     fun searchNewsOfflineFirst(query: String): Flow<List<News>> {
-        return newsDao.getLatestNews(query)
+        return newsDao.getNewsByQuery(query)
             .map { newsList ->
                 newsList.map { it.asExternalModel() }
             }

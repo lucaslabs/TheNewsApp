@@ -2,4 +2,10 @@ package com.thenewsapp.data.network.model
 
 import com.google.gson.annotations.SerializedName
 
-data class NewsListResponse(@SerializedName("articles") val news: List<NewsResponse>)
+/**
+ * Network model of a list of news.
+ */
+data class NewsListResponse(
+    @SerializedName("articles")
+    val news: List<NewsResponse>
+)

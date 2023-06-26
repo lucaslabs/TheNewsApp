@@ -1,10 +1,11 @@
-package com.thenewsapp.data
+package com.thenewsapp.data.di
 
 import android.content.Context
 import androidx.room.Room
 import com.thenewsapp.data.database.NewsDao
 import com.thenewsapp.data.database.NewsDatabase
 import com.thenewsapp.data.network.ApiKeyInterceptor
+import com.thenewsapp.data.network.NewsService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,6 +16,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+/**
+ * Dependency provider module to be injected in the app components.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {

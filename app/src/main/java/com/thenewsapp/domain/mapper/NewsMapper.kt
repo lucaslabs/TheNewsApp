@@ -1,8 +1,17 @@
-package com.thenewsapp.data.mapper
+package com.thenewsapp.domain.mapper
 
 import com.thenewsapp.data.database.model.NewsEntity
-import com.thenewsapp.data.model.News
 import com.thenewsapp.data.network.model.NewsResponse
+import com.thenewsapp.domain.model.News
+
+/**
+ * Extension functions to convert between the different models.
+ *
+ * NewsEntity: database model.
+ * NewsResponse: network model.
+ * News: domain model.
+ */
+
 
 /**
  * Converts the network model to the local model for persisting by the local data source.

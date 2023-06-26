@@ -1,5 +1,8 @@
-package com.thenewsapp.data.model
+package com.thenewsapp.domain.model
 
+/**
+ * Domain model of a news.
+ */
 data class News(
     val author: String?,
     val title: String,
