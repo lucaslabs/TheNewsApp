@@ -2,6 +2,6 @@
     <string name="app_name">TheNewsApp</string>
     <string name="search">Search</string>
     <string name="no_results_found">No results found for your search criteria. Try with a new one :)</string>
-    <string name="error_generic">Error performing the task. Try again.</string>
+    <string name="generic_error">Error performing the task. Try again.</string>
     <string name="read_more_at">Read more at: %s</string>
 </resources>
