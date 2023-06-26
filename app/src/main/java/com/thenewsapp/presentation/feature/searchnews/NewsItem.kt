@@ -59,10 +59,11 @@ fun NewsItem(
                 .padding(horizontal = 8.dp, vertical = 8.dp)
         ) {
             AsyncImage(
+                modifier = Modifier.size(64.dp),
                 model = news.urlToImage,
                 contentDescription = null,
                 placeholder = painterResource(id = R.drawable.ic_news_placeholder),
-                modifier = Modifier.size(64.dp)
+                error = painterResource(id = R.drawable.ic_news_placeholder)
             )
             Text(
                 modifier = Modifier.padding(start = 8.dp),

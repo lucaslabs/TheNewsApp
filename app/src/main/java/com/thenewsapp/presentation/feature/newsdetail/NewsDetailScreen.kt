@@ -11,7 +11,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
@@ -21,6 +20,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.thenewsapp.R
 import com.thenewsapp.data.model.News
@@ -45,7 +45,7 @@ fun NewsDetailPreview() {
 fun NewsDetailScreen(
     viewModel: SearchNewsViewModel
 ) {
-    val selectedNews by viewModel.selectedNews.collectAsState()
+    val selectedNews by viewModel.selectedNews.collectAsStateWithLifecycle()
 
     NewsDetailContent(selectedNews = selectedNews)
 }
@@ -72,7 +72,8 @@ fun NewsDetailContent(
                     modifier = Modifier.fillMaxWidth(),
                     model = it.urlToImage,
                     contentDescription = null,
-                    placeholder = painterResource(id = R.drawable.ic_news_placeholder)
+                    placeholder = painterResource(id = R.drawable.ic_news_placeholder),
+                    error = painterResource(id = R.drawable.ic_news_placeholder)
                 )
 
                 Text(
