@@ -3,11 +3,11 @@ package com.thenewsapp.presentation.feature.searchnews
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -18,6 +18,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,10 +42,34 @@ fun SearchNewsScreenPreview(
     @PreviewParameter(NewsPreviewParameterProvider::class) newsList: List<News>
 ) {
     SearchNewsContent(
-        newsList = newsList,
-        onSearch = { },
+        state = SearchNewsUiState.Success(newsList),
+        onSearchNews = { },
         onNewsClick = { },
         onNavigateToNewsDetailScreen = { }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ShowEmptyStatePreview() {
+    SearchNewsContent(
+        state = SearchNewsUiState.Success(emptyList()),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ShowLoadingPreview() {
+    SearchNewsContent(
+        state = SearchNewsUiState.Loading
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ShowErrorPreview() {
+    SearchNewsContent(
+        state = SearchNewsUiState.Error(Throwable("Error message"))
     )
 }
 
@@ -53,62 +78,48 @@ fun SearchNewsScreen(
     viewModel: SearchNewsViewModel,
     onNavigateToNewsDetailScreen: () -> Unit
 ) {
+    val state: SearchNewsUiState by viewModel.state.collectAsStateWithLifecycle()
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
-
-    when (val result = state) {
-        is SearchNewsUiState.Idle -> {
-            SearchNewsContent(
-                onSearch = { query ->
-                    viewModel.searchNews(query)
-                },
-                onNewsClick = { },
-                onNavigateToNewsDetailScreen = { }
-            )
+    SearchNewsContent(
+        state = state,
+        onSearchNews = { query ->
+            viewModel.searchNews(query)
+        },
+        onNewsClick = { news ->
+            viewModel.selectedNews.value = news
+        },
+        onNavigateToNewsDetailScreen = {
+            onNavigateToNewsDetailScreen()
         }
-
-        is SearchNewsUiState.Loading -> ShowLoadingIndicator()
-        is SearchNewsUiState.Success -> {
-            SearchNewsContent(
-                newsList = result.news,
-                onSearch = { },
-                onNewsClick = { news ->
-                    viewModel.selectedNews.value = news
-                },
-                onNavigateToNewsDetailScreen = {
-                    onNavigateToNewsDetailScreen()
-                }
-            )
-        }
-
-        is SearchNewsUiState.Error -> ShowError(error = result.throwable.message)
-    }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchNewsContent(
-    newsList: List<News> = emptyList(),
-    onSearch: (String) -> Unit,
-    onNewsClick: (News) -> Unit,
-    onNavigateToNewsDetailScreen: () -> Unit
+    state: SearchNewsUiState,
+    onSearchNews: (String) -> Unit = { },
+    onNewsClick: (News) -> Unit = { },
+    onNavigateToNewsDetailScreen: () -> Unit = { }
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
     ) {
         SearchBar(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.TopStart),
             query = query,
             onQueryChange = { query = it },
             onSearch = { query ->
                 active = false
                 if (query.isNotEmpty()) {
-                    onSearch(query)
+                    onSearchNews(query)
                 }
             },
             active = active,
@@ -121,8 +132,9 @@ fun SearchNewsContent(
             leadingIcon = {
                 IconButton(
                     onClick = {
+                        active = false
                         if (query.isNotEmpty()) {
-                            onSearch(query)
+                            onSearchNews(query)
                         }
                     }
                 ) {
@@ -149,51 +161,66 @@ fun SearchNewsContent(
             },
         ) { }
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth(),
-            state = rememberLazyListState(),
-            contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(items = newsList) { news ->
-                NewsItem(
-                    news = news,
-                    onNewsClick = {
-                        onNewsClick(news)
-                        onNavigateToNewsDetailScreen()
+        when (val result = state) {
+            is SearchNewsUiState.Idle -> {
+                // no-op
+            }
+
+            is SearchNewsUiState.Loading -> {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .align(Alignment.Center)
+                )
+            }
+
+            is SearchNewsUiState.Success -> {
+                if (result.news.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(top = 64.dp)
+                            .fillMaxWidth()
+                            .align(Alignment.TopStart),
+                        state = rememberLazyListState(),
+                        contentPadding = PaddingValues(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(items = result.news) { news ->
+                            NewsItem(
+                                news = news,
+                                onNewsClick = {
+                                    onNewsClick(news)
+                                    onNavigateToNewsDetailScreen()
+                                }
+                            )
+                        }
                     }
+                } else {
+                    Text(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth()
+                            .align(Alignment.Center),
+                        text = stringResource(id = R.string.no_results_found),
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleLarge,
+                        maxLines = 2
+                    )
+                }
+            }
+
+            is SearchNewsUiState.Error -> {
+                Text(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                        .align(Alignment.Center),
+                    text = result.throwable.message ?: stringResource(id = R.string.generic_error),
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleLarge,
+                    maxLines = 2
                 )
             }
         }
-    }
-}
-
-@Composable
-fun ShowLoadingIndicator() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .align(Alignment.Center),
-        )
-    }
-}
-
-@Composable
-fun ShowError(error: String?) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
-    ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center),
-            text = error ?: stringResource(id = R.string.error_generic),
-        )
     }
 }
