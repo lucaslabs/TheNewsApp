@@ -46,6 +46,7 @@ class SearchNewsViewModelTest {
         private const val RESULT_QUERY = "android"
         private const val NO_RESULT_QUERY = "lorem ipsum"
         private const val ERROR_QUERY = "error"
+        private const val ERROR_MESSAGE = "Error message"
     }
 
     @Before
@@ -64,7 +65,8 @@ class SearchNewsViewModelTest {
 
         // Then
         viewModel.state.test {
-            assertTrue(awaitItem() is SearchNewsUiState.Loading)
+            val actualItem: SearchNewsUiState = awaitItem()
+            assertTrue(actualItem.isLoading)
         }
     }
 
@@ -79,9 +81,8 @@ class SearchNewsViewModelTest {
 
         // Then
         viewModel.state.test {
-            val actualItem = awaitItem()
-            assertTrue(actualItem is SearchNewsUiState.Success)
-            assertTrue((actualItem as SearchNewsUiState.Success).news.isNotEmpty())
+            val actualItem: SearchNewsUiState = awaitItem()
+            assertTrue(actualItem.news.isNotEmpty())
         }
     }
 
@@ -95,16 +96,15 @@ class SearchNewsViewModelTest {
 
         // Then
         viewModel.state.test {
-            val actualItem = awaitItem()
-            assertTrue(actualItem is SearchNewsUiState.Success)
-            assertTrue((actualItem as SearchNewsUiState.Success).news.isEmpty())
+            val actualItem: SearchNewsUiState = awaitItem()
+            assertTrue(actualItem.news.isEmpty())
         }
     }
 
     @Test
     fun `search news not valid query should show error`() = runTest {
         // Given
-        every { searchNewsUseCase(ERROR_QUERY) } returns flow { throw IllegalStateException("Error message") }
+        every { searchNewsUseCase(ERROR_QUERY) } returns flow { throw IllegalStateException(ERROR_MESSAGE) }
 
         // When
         viewModel.searchNews(ERROR_QUERY)
@@ -112,8 +112,7 @@ class SearchNewsViewModelTest {
         // Then
         viewModel.state.test {
             val actualItem: SearchNewsUiState = awaitItem()
-            assertTrue(actualItem is SearchNewsUiState.Error)
-            assertTrue((actualItem as SearchNewsUiState.Error).throwable.message == "Error message")
+            assertTrue(actualItem.error == ERROR_MESSAGE)
         }
     }
 }
