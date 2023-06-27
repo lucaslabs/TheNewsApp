@@ -45,7 +45,7 @@ fun SearchNewsScreenPreview(
     @PreviewParameter(NewsPreviewParameterProvider::class) newsList: List<News>
 ) {
     SearchNewsContent(
-        state = SearchNewsUiState.Success(newsList),
+        state = SearchNewsUiState(news = newsList),
         onSearchNews = { },
         onNewsClick = { },
         onNavigateToNewsDetailScreen = { }
@@ -56,7 +56,15 @@ fun SearchNewsScreenPreview(
 @Composable
 fun ShowEmptyStatePreview() {
     SearchNewsContent(
-        state = SearchNewsUiState.Success(emptyList()),
+        state = SearchNewsUiState(news = emptyList()),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ShowIdlePreview() {
+    SearchNewsContent(
+        state = SearchNewsUiState(isIdle = true)
     )
 }
 
@@ -64,7 +72,7 @@ fun ShowEmptyStatePreview() {
 @Composable
 fun ShowLoadingPreview() {
     SearchNewsContent(
-        state = SearchNewsUiState.Loading
+        state = SearchNewsUiState(isLoading = true)
     )
 }
 
@@ -72,7 +80,7 @@ fun ShowLoadingPreview() {
 @Composable
 fun ShowErrorPreview() {
     SearchNewsContent(
-        state = SearchNewsUiState.Error(Throwable("Error message"))
+        state = SearchNewsUiState(error = "Error message")
     )
 }
 
@@ -132,7 +140,7 @@ fun SearchNewsContent(
             onActiveChange = { active = it },
             placeholder = {
                 Text(
-                    text = stringResource(id = R.string.search)
+                    text = stringResource(id = R.string.search_news)
                 )
             },
             leadingIcon = {
@@ -167,61 +175,63 @@ fun SearchNewsContent(
             },
         ) { }
 
-        when (val result = state) {
-            is SearchNewsUiState.Idle -> {
-                // no-op
-            }
-
-            is SearchNewsUiState.Loading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(dimenXLarge)
-                        .align(Alignment.Center)
-                )
-            }
-
-            is SearchNewsUiState.Success -> {
-                if (result.news.isNotEmpty()) {
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(top = dimenXXLarge)
-                            .fillMaxWidth()
-                            .align(Alignment.TopStart),
-                        state = rememberLazyListState(),
-                        contentPadding = PaddingValues(dimenMedium),
-                        verticalArrangement = Arrangement.spacedBy(dimenLarge)
-                    ) {
-                        items(items = result.news) { news ->
-                            NewsItem(
-                                news = news,
-                                onNewsClick = {
-                                    onNewsClick(news)
-                                    onNavigateToNewsDetailScreen()
-                                }
-                            )
+        if (state.news.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(top = dimenXXLarge)
+                    .fillMaxWidth()
+                    .align(Alignment.TopStart),
+                state = rememberLazyListState(),
+                contentPadding = PaddingValues(dimenMedium),
+                verticalArrangement = Arrangement.spacedBy(dimenLarge)
+            ) {
+                items(items = state.news) { news ->
+                    NewsItem(
+                        news = news,
+                        onNewsClick = {
+                            onNewsClick(news)
+                            onNavigateToNewsDetailScreen()
                         }
-                    }
-                } else {
-                    Text(
-                        modifier = Modifier
-                            .padding(dimenMedium)
-                            .fillMaxWidth()
-                            .align(Alignment.Center),
-                        text = stringResource(id = R.string.no_results_found),
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.titleLarge,
-                        maxLines = 2
                     )
                 }
             }
-
-            is SearchNewsUiState.Error -> {
+        } else {
+            // Empty news list cases
+            if (state.isIdle) {
                 Text(
                     modifier = Modifier
                         .padding(dimenMedium)
                         .fillMaxWidth()
                         .align(Alignment.Center),
-                    text = result.throwable.message ?: stringResource(id = R.string.generic_error),
+                    text = stringResource(id = R.string.start_searching),
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleLarge,
+                    maxLines = 2
+                )
+            } else if (state.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(dimenXLarge)
+                        .align(Alignment.Center)
+                )
+            } else if (state.error != null) {
+                Text(
+                    modifier = Modifier
+                        .padding(dimenMedium)
+                        .fillMaxWidth()
+                        .align(Alignment.Center),
+                    text = state.error ?: stringResource(id = R.string.generic_error),
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleLarge,
+                    maxLines = 2
+                )
+            } else {
+                Text(
+                    modifier = Modifier
+                        .padding(dimenMedium)
+                        .fillMaxWidth()
+                        .align(Alignment.Center),
+                    text = stringResource(id = R.string.no_results_found),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleLarge,
                     maxLines = 2

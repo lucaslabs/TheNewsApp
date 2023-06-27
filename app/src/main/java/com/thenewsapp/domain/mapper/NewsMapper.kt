@@ -28,7 +28,7 @@ fun NewsResponse.asEntity() = NewsEntity(
 /**
  * Converts the local model to the external model for use by layers external to the data layer.
  */
-fun NewsEntity.asExternalModel() = News(
+fun NewsEntity.toDomain() = News(
     author = author,
     title = title,
     description = description,

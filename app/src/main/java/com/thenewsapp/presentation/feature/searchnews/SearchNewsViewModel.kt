@@ -18,7 +18,7 @@ class SearchNewsViewModel @Inject constructor(
     private val searchNewsUseCase: SearchNewsUseCase
 ) : ViewModel() {
 
-    var state = MutableStateFlow<SearchNewsUiState>(SearchNewsUiState.Idle)
+    var state = MutableStateFlow(SearchNewsUiState(isIdle = true))
         private set
 
     var selectedNews = MutableStateFlow<News?>(null)
@@ -27,14 +27,14 @@ class SearchNewsViewModel @Inject constructor(
     fun searchNews(query: String) {
         viewModelScope.launch {
             if (query.isNotEmpty()) {
-                state.value = SearchNewsUiState.Loading
+                state.value = SearchNewsUiState(isLoading = true)
 
                 searchNewsUseCase(query)
                     .catch {
-                        state.value = SearchNewsUiState.Error(it)
+                        state.value = SearchNewsUiState(error = it.message)
                     }
                     .collect {
-                        state.value = SearchNewsUiState.Success(it)
+                        state.value = SearchNewsUiState(news = it)
                     }
             }
         }

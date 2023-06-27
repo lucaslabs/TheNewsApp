@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">TheNewsApp</string>
-    <string name="search">Search</string>
+    <string name="search_news">Search news</string>
+    <string name="start_searching">Start searching for the latest news on your favorite topic :)</string>
     <string name="no_results_found">No results found for your search criteria. Try with a new one :)</string>
     <string name="generic_error">Error performing the task. Try again.</string>
     <string name="read_more_at">Read more at: %s</string>
