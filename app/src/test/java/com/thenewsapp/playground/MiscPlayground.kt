@@ -890,4 +890,32 @@ class MiscPlayground {
 
         return Pair(secondExchange, firstExchange)
     }
+
+    /**
+     * The challenge is to find and print the number of occurrences of the letter “a”
+     * in the first n letters of an infinite string.
+     * s is the string to be repeated.
+     * n is the number of characters to consider.
+     */
+    @Test
+    fun countOccurrences() {
+        // Given
+        val s = "aba"
+        val n = 6L
+
+        // When
+        val output = countOccurrences(s, n)
+
+        // Then
+        assertThat(output, equalTo(4))
+    }
+
+    private fun countOccurrences(s: String, n: Long): Long {
+        val occurrencesPerRepeat = s.count { it == 'a' }
+        val repeatCount = n / s.length
+        val remainingChars = (n % s.length).toInt()
+
+        return occurrencesPerRepeat * repeatCount +
+                s.substring(0, remainingChars).count { it == 'a' }
+    }
 }
