@@ -6,6 +6,9 @@ import com.thenewsapp.data.database.NewsDao
 import com.thenewsapp.data.database.NewsDatabase
 import com.thenewsapp.data.network.ApiKeyInterceptor
 import com.thenewsapp.data.network.NewsService
+import com.thenewsapp.data.repository.NewsRepositoryImpl
+import com.thenewsapp.domain.repository.NewsRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -65,4 +68,12 @@ object DataModule {
     fun provideNewsDao(newsDatabase: NewsDatabase): NewsDao =
         newsDatabase.newsDao()
 
+    @Module
+    @InstallIn(SingletonComponent::class)
+    abstract class RepositoryModule {
+
+        @Binds
+        @Singleton
+        abstract fun bindNewsRepository(impl: NewsRepositoryImpl): NewsRepository
+    }
 }

@@ -1,6 +1,6 @@
 package com.thenewsapp.domain
 
-import com.thenewsapp.data.repository.NewsRepository
+import com.thenewsapp.domain.repository.NewsRepository
 import com.thenewsapp.domain.model.News
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
