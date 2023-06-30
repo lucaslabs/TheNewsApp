@@ -3,6 +3,7 @@ package com.thenewsapp.playground
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import kotlin.math.abs
 
@@ -682,18 +683,21 @@ class MiscPlayground {
     @Test
     fun minStack() {
         // Given
-        val minStack = MinStack()
+        val minStack = MinStack<Int>()
         minStack.push(-2)
         minStack.push(0)
         minStack.push(-3)
 
-        val expectedOutput = -3
-
         // When
-        val output = minStack.getMin()
+        val output1 = minStack.min() // return -3
+        minStack.pop()
+        val output2 = minStack.top()    // return 0
+        val output3  = minStack.min() // return -2
 
         // Then
-        assertThat(output, equalTo(expectedOutput))
+        assertEquals(output1, -3)
+        assertEquals(output2, 0)
+        assertEquals(output3, -2)
     }
 
     /**

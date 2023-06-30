@@ -1,22 +1,24 @@
 package com.thenewsapp.playground
 
-class MinStack {
-    private val stack = mutableListOf<Int>()
-    private val minStack = mutableListOf<Int>()
+class MinStack<T: Comparable<T>> {
+    private val stack = mutableListOf<T>()
+    private val minStack = mutableListOf<T>()
 
-    fun push(x: Int) {
+    fun push(x: T) {
         stack.add(x)
-        if (minStack.isEmpty() || x <= getMin())
+        if(minStack.isEmpty() || x <= min()) {
             minStack.add(x)
+        }
     }
 
     fun pop() {
-        if (stack.last() == getMin())
+        if(stack.last() == min()){
             minStack.removeAt(minStack.lastIndex)
+        }
         stack.removeAt(stack.lastIndex)
     }
 
-    fun top() = stack.last()
+    fun top(): T? = stack.lastOrNull()
 
-    fun getMin() = minStack.last()
+    fun min(): T = minStack.last()
 }
