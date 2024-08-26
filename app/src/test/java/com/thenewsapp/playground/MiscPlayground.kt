@@ -1,11 +1,11 @@
 package com.thenewsapp.playground
 
+import kotlin.math.abs
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import kotlin.math.abs
 
 class MiscPlayground {
 
@@ -370,7 +370,6 @@ class MiscPlayground {
         return longestCommonPrefix
     }
 
-
     /**
      * Valid Parentheses:
      * Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
@@ -692,7 +691,7 @@ class MiscPlayground {
         val output1 = minStack.min() // return -3
         minStack.pop()
         val output2 = minStack.top()    // return 0
-        val output3  = minStack.min() // return -2
+        val output3 = minStack.min() // return -2
 
         // Then
         assertEquals(output1, -3)
@@ -723,7 +722,7 @@ class MiscPlayground {
         val output = encodeCaesarCipher(input, shift)
 
         // Then
-        Assert.assertEquals(output, expectedOutput)
+        assertEquals(output, expectedOutput)
     }
 
     @Test
@@ -737,7 +736,7 @@ class MiscPlayground {
         val output = encodeCaesarCipher(input, shift)
 
         // Then
-        Assert.assertEquals(output, expectedOutput)
+        assertEquals(output, expectedOutput)
     }
 
     @Test
@@ -751,7 +750,7 @@ class MiscPlayground {
         val output = encodeCaesarCipher(input, shift)
 
         // Then
-        Assert.assertEquals(output, expectedOutput)
+        assertEquals(output, expectedOutput)
     }
 
     private fun encodeCaesarCipher(str: String, shift: Int): String {
@@ -920,6 +919,48 @@ class MiscPlayground {
         val remainingChars = (n % s.length).toInt()
 
         return occurrencesPerRepeat * repeatCount +
-                s.substring(0, remainingChars).count { it == 'a' }
+            s.substring(0, remainingChars).count { it == 'a' }
+    }
+
+    /**
+     * Write a function that prints the numbers from 1 to 100.
+     * However, for multiples of three, print "Fizz" instead of the number,
+     * and for the multiples of five, print "Buzz".
+     * For numbers which are multiples of both three and five, print "FizzBuzz”, anything else prints the number.
+     */
+    @Test
+    fun testFizzBuzz() {
+        val startRange = 1
+        val endRange = 15
+
+        val key1 = 3
+        val value1 = "Fizz"
+        val key2 = 5
+        val value2 = "Buzz"
+        val key3 = key1 * key2
+        val value3 = value1 + value2
+        val rules = mapOf(key1 to value1, key2 to value2, key3 to value3)
+
+        val output = fizzBuzz(startRange = startRange, endRange = endRange, rules = rules)
+
+        assertThat(output, equalTo("1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz "))
+    }
+
+    private fun fizzBuzz(startRange: Int, endRange: Int, rules: Map<Int, String>): String {
+        val output = StringBuilder()
+        for (i in startRange..endRange) {
+            var valueOutput = ""
+            for ((key, value) in rules) {
+                if (i % key == 0) {
+                    valueOutput = "$value "
+                }
+            }
+            if (valueOutput.isEmpty()) {
+                output.append("$i ")
+            } else {
+                output.append(valueOutput)
+            }
+        }
+        return output.toString()
     }
 }
